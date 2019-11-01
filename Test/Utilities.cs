@@ -106,7 +106,7 @@ namespace CMakeParser.Test
             Program.MainFunc(_args.ToArray(), writer);
 
             Delete(result);
-            _lines = writer.Buffer.Replace(Combine("Source"), "${SourceDirec}");
+            _lines = writer.Buffer.Replace(Combine("Source"), "${SourceDirec}").Replace("/", "\\");
             var file = new System.IO.StreamWriter(Combine(result));
             file.Write(_lines);
             file.Close();
