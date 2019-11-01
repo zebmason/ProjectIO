@@ -12,6 +12,21 @@ namespace CMakeParser.Test
 
     class Utilities
     {
+        class Writer : Program.IWriter
+        {
+            private readonly System.IO.StringWriter _writer = new System.IO.StringWriter();
+
+            public void WriteLine(string line)
+            {
+                _writer.WriteLine(line);
+            }
+
+            public string Buffer
+            {
+                get { return _writer.ToString(); }
+            }
+        }
+
         private readonly string _dataDirec;
 
         private readonly List<string> _args = new List<string>();
@@ -87,18 +102,11 @@ namespace CMakeParser.Test
 
         internal void Eval(string result)
         {
-            var writer = new System.IO.StringWriter();
-            System.Console.SetOut(writer);
-            System.Console.WindowWidth = 1000;
-
-            Program.Main(_args.ToArray());
-
-            var standardOutput = new System.IO.StreamWriter(System.Console.OpenStandardOutput());
-            standardOutput.AutoFlush = true;
-            System.Console.SetOut(standardOutput);
+            var writer = new Writer();
+            Program.MainFunc(_args.ToArray(), writer);
 
             Delete(result);
-            _lines = writer.ToString().Replace(Combine("Source"), "${SourceDirec}");
+            _lines = writer.Buffer.Replace(Combine("Source"), "${SourceDirec}");
             var file = new System.IO.StreamWriter(Combine(result));
             file.Write(_lines);
             file.Close();
