@@ -1,4 +1,10 @@
-﻿using System.Reflection;
+﻿//------------------------------------------------------------------------------
+// <copyright file="AssemblyInfo.cs" company="Zebedee Mason">
+//     Copyright (c) 2019 Zebedee Mason.
+// </copyright>
+//------------------------------------------------------------------------------
+
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 

@@ -1,6 +1,6 @@
-﻿//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // <copyright file="AssemblyInfo.cs" company="Zebedee Mason">
-//     Copyright (c) 2019 Zebedee Mason.
+//     Copyright (c) 2016-2017 Zebedee Mason.
 // </copyright>
 //------------------------------------------------------------------------------
 
@@ -11,12 +11,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CMakeLister")]
+[assembly: AssemblyTitle("Test")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("CMakeLister")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCopyright("Copyright �  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -26,7 +26,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("8e6161fc-e356-43d1-93a3-55131e382c4b")]
+[assembly: Guid("63477a77-77b1-4987-bfff-ea8a5bc2fc75")]
 
 // Version information for an assembly consists of the following four values:
 //

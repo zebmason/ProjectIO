@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CMakeParser
 {
-    class Program
+    public class Program
     {
         public class Logger : ILogger
         {
@@ -71,7 +71,7 @@ namespace CMakeParser
             return lists;
         }
 
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             var state = new State(args[0], (args.Length > 1) ? args[1] : string.Empty);
             var cmake = Instance(state);
