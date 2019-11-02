@@ -106,7 +106,7 @@ namespace CMakeParser.Test
             Program.MainFunc(_args.ToArray(), writer);
 
             Delete(result);
-            _lines = writer.Buffer.Replace(Combine("Source"), "${SourceDirec}").Replace("/", "\\");
+            _lines = writer.Buffer.Replace(Combine("Source"), "${SourceDirec}").Replace(Combine("Binary"), "${BinaryDirec}").Replace("/", "\\");
             var file = new System.IO.StreamWriter(Combine(result));
             file.Write(_lines);
             file.Close();
@@ -122,13 +122,13 @@ namespace CMakeParser.Test
             return this;
         }
 
-        public static void ReadTest(string sourceDirec, string binaryDirec)
+        public static void ReadTest(string direc)
         {
             var utils = new Utilities();
-            var result = System.IO.Path.Combine("Results", sourceDirec) + ".log";
-            utils.ConstructRead(System.IO.Path.Combine("Source", sourceDirec), binaryDirec).Eval(result);
+            var result = System.IO.Path.Combine("Results", direc) + ".log";
+            utils.ConstructRead(System.IO.Path.Combine("Source", direc), System.IO.Path.Combine("Binary", direc)).Eval(result);
 
-            var processed = System.IO.Path.Combine("Processed", sourceDirec) + ".log";
+            var processed = System.IO.Path.Combine("Processed", direc) + ".log";
             utils.CompareLogs(processed);
         }
     }

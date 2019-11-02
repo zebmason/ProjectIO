@@ -14,7 +14,13 @@ namespace CMakeParser.Test
         [Test]
         public void SourceGroups()
         {
-            Utilities.ReadTest(@"SourceGroups", string.Empty);
+            Utilities.ReadTest(@"SourceGroups");
+        }
+
+        [Test]
+        public void ConfigureFile()
+        {
+            Utilities.ReadTest(@"ConfigureFile");
         }
     }
 }

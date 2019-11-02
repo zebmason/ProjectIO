@@ -1,0 +1,3 @@
+Setting ${SourceDirec}\ConfigureFile\source.cpp to filter lib
+Setting ${BinaryDirec}\ConfigureFile\config.h to filter lib
+[${PROJECT_SOURCE_DIR}] Adding ${SourceDirec}\ConfigureFile\source.cpp to lib
