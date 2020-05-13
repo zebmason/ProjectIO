@@ -20,6 +20,7 @@ namespace CMakeParser.Command
         {
             var bits = Utilities.Split(command.Value, new string[] { "AFTER", "BEFORE", "SYSTEM" });
             var line = command.Value.Replace("AFTER", string.Empty).Replace("BEFORE", string.Empty).Replace("SYSTEM", string.Empty);
+            line = state.Replace(line);
             if (bits.ContainsKey("AFTER") || state.Properties["CMAKE_INCLUDE_DIRECTORIES_BEFORE"] == "OFF")
                 state.Properties["INCLUDE_DIRECTORIES"] = string.Format("{0} {1}", state.Properties["INCLUDE_DIRECTORIES"], line);
             else
