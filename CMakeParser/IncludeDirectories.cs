@@ -1,10 +1,10 @@
 ﻿//------------------------------------------------------------------------------
 // <copyright file="AddProp.cs" company="Zebedee Mason">
-//     Copyright (c) 2019 Zebedee Mason.
+//     Copyright (c) 2019-2020 Zebedee Mason.
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace CMakeParser.Command
+namespace CMakeParser.Core
 {
     using System.Collections.Generic;
 

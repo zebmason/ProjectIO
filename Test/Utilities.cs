@@ -1,6 +1,6 @@
 ﻿//------------------------------------------------------------------------------
 // <copyright file="Utilities.cs" company="Zebedee Mason">
-//     Copyright (c) 2019 Zebedee Mason.
+//     Copyright (c) 2019-2020 Zebedee Mason.
 // </copyright>
 //------------------------------------------------------------------------------
 
@@ -12,7 +12,7 @@ namespace CMakeParser.Test
 
     class Utilities
     {
-        class Writer : Lister.Program.IWriter
+        class Writer : Common.IWriter
         {
             private readonly System.IO.StringWriter _writer = new System.IO.StringWriter();
 

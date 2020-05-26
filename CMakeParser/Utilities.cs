@@ -4,7 +4,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace CMakeParser
+namespace CMakeParser.Core
 {
     using System.Collections.Generic;
     using System.Linq;

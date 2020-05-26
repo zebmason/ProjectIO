@@ -1,0 +1,3 @@
+    <{{compile}} Include="{{path}}">
+      <Filter>{{filter}}</Filter>
+    </{{compile}}>

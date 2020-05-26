@@ -1,0 +1,3 @@
+    <Filter Include="{{filter}}">
+      <UniqueIdentifier>{{{guid}}}</UniqueIdentifier>
+    </Filter>

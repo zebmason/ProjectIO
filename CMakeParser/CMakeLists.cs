@@ -4,7 +4,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace CMakeParser
+namespace CMakeParser.Core
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -15,7 +15,7 @@ namespace CMakeParser
 
         private State _state;
 
-        private readonly Dictionary<string, Command.ICommand> _commands = new Dictionary<string, Command.ICommand>();
+        private readonly Dictionary<string, Core.ICommand> _commands = new Dictionary<string, Core.ICommand>();
 
         public CMakeLists(State state, ILogger notHandled)
         {
@@ -23,7 +23,7 @@ namespace CMakeParser
             _logger = notHandled;
         }
 
-        public void AddCommand(string name, Command.ICommand command)
+        public void AddCommand(string name, Core.ICommand command)
         {
             command.Initialise(_state);
             _commands[name] = command;
@@ -65,6 +65,64 @@ namespace CMakeParser
             return true;
         }
 
+        private bool IfElseIfElse(KeyValuePair<string, string> command, Block block)
+        {
+            if (command.Key != "else")
+            {
+                var bits = command.Value.Split().ToList();
+
+                int i = 0;
+                var logicals = new string[] { "TRUE", "FALSE", "AND", "OR", "NOT" };
+                for (; i < bits.Count; ++i)
+                {
+                    if (logicals.Contains(bits[i]))
+                        continue;
+
+                    if (_state.Switches.ContainsKey(bits[i]))
+                        bits[i] = _state.Switches[bits[i]] ? "TRUE" : "FALSE";
+                    else if (_state.Variables.ContainsKey("${" + bits[i] + "}"))
+                        bits[i] = "TRUE";
+                    else
+                    {
+                        _logger.Message(string.Format("Skipping {0}({1}) at {2}", command.Key, command.Value, bits[i]), _state);
+                        return false;
+                    }
+                }
+
+                while ((i = bits.IndexOf("NOT")) != -1)
+                {
+                    bits[i] = bits[i + 1] == "TRUE" ? "FALSE" : "TRUE";
+                    bits.RemoveAt(i + 1);
+                }
+
+                while ((i = bits.IndexOf("AND")) != -1)
+                {
+                    bits[i - 1] = bits[i - 1] == "TRUE" && bits[i + 1] == "TRUE" ? "TRUE" : "FALSE";
+                    bits.RemoveAt(i);
+                    bits.RemoveAt(i);
+                }
+
+                while ((i = bits.IndexOf("OR")) != -1)
+                {
+                    bits[i - 1] = bits[i - 1] == "TRUE" || bits[i + 1] == "TRUE" ? "TRUE" : "FALSE";
+                    bits.RemoveAt(i);
+                    bits.RemoveAt(i);
+                }
+
+                if (bits.Count != 1)
+                {
+                    _logger.Message(string.Format("Skipping {0}({1}) == {2}", command.Key, command.Value, string.Join(" ", bits)), _state);
+                    return false;
+                }
+
+                if (bits[0] == "FALSE")
+                    return true;
+            }
+
+            Parse(block._blocks);
+            return false;
+        }
+        
         private class Block
         {
             public string _line = string.Empty;
@@ -140,6 +198,7 @@ namespace CMakeParser
 
         private void Parse(List<Block> blocks)
         {
+            bool evaluateIf = true;
             foreach (var block in blocks)
             {
                 var line = block._line;
@@ -154,6 +213,25 @@ namespace CMakeParser
                 if (command.Key == "foreach")
                 {
                     ForEach(command, block);
+                    continue;
+                }
+
+                if (command.Key == "endforeach")
+                {
+                    continue;
+                }
+
+                if (command.Key == "if" || command.Key == "elseif" || command.Key == "else")
+                {
+                    if (!evaluateIf)
+                        continue;
+                    evaluateIf = IfElseIfElse(command, block);
+                    continue;
+                }
+
+                if (command.Key == "endif")
+                {
+                    evaluateIf = true;
                     continue;
                 }
 

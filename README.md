@@ -10,7 +10,8 @@ Targeted at C++ builds with corresponding include directories and source groups.
 
 ## Usage
 
-See the simple [listing example](CMakeLister/Program.cs).
+See the simple [listing example](CMakeLister/Program.cs) and the more 
+complicated [Visual Studio solution generator](VisualStudio/Program.cs).
 
 ## Contributing
 

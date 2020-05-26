@@ -4,7 +4,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace CMakeParser
+namespace CMakeParser.Core
 {
     using System;
     using System.Collections.Generic;
@@ -14,7 +14,11 @@ namespace CMakeParser
     {
         public Dictionary<string, string> Variables { get; } = new Dictionary<string, string>();
 
+        public Dictionary<string, bool> Switches { get; } = new Dictionary<string, bool>();
+
         public Dictionary<string, string> Properties { get; } = new Dictionary<string, string>();
+
+        public List<string> IncludeDirectories { get; } = new List<string>();
 
         public State(string sourceDirec, string binaryDirec)
         {
@@ -22,12 +26,17 @@ namespace CMakeParser
             Variables["${PROJECT_BINARY_DIR}"] = binaryDirec;
             Variables["${CMAKE_CURRENT_SOURCE_DIR}"] = "${PROJECT_SOURCE_DIR}";
             Variables["${CMAKE_CURRENT_BINARY_DIR}"] = "${PROJECT_BINARY_DIR}";
+
+            Switches["WIN32"] = true;
+            Switches["UNIX"] = false;
         }
 
         public State(State state)
         {
             Variables = state.Variables.ToDictionary(entry => entry.Key, entry => entry.Value);
             Properties = state.Properties.ToDictionary(entry => entry.Key, entry => entry.Value);
+            Switches = state.Switches.ToDictionary(entry => entry.Key, entry => entry.Value);
+            IncludeDirectories = state.IncludeDirectories.ToList();
         }
 
         public State SubDirectory(string sub)
@@ -85,6 +94,9 @@ namespace CMakeParser
             var items = new List<string>();
             foreach (var item in SplitList(list))
             {
+                if (item.Contains("::"))
+                    continue;
+
                 items.Add(FullPath(item));
             }
 
@@ -101,6 +113,44 @@ namespace CMakeParser
             }
 
             return items;
+        }
+
+        public void ReadCache(string cachePath)
+        {
+            if (cachePath.Length == 0)
+                return;
+
+            var lines = System.IO.File.ReadAllLines(cachePath);
+            foreach (var l in lines)
+            {
+                var line = l.Trim();
+                if (line.Length < 1 || line[0] == '/' || line[0] == '#')
+                    continue;
+
+                var i = line.IndexOf("=");
+                if (i == -1)
+                    continue;
+
+                var value = line.Substring(i + 1);
+                var variable = line.Substring(0, i);
+                var type = string.Empty;
+                i = variable.IndexOf(":");
+                if (i != -1)
+                {
+                    type = variable.Substring(i + 1);
+                    variable = variable.Substring(0, i);
+                }
+
+                if (type == "BOOL")
+                {
+                    if (value == "ON" || value == "True")
+                        Switches[variable] = true;
+                    else if (value == "OFF" || value == "False")
+                        Switches[variable] = false;
+                }
+                else
+                    Variables["${" + variable + "}"] = value;
+            }
         }
     }
 }

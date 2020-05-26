@@ -1,6 +1,6 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="AddBinary.cs" company="Zebedee Mason">
-//     Copyright (c) 2019-2020 Zebedee Mason.
+// <copyright file="TargetLinkLibraries.cs" company="Zebedee Mason">
+//     Copyright (c) 2020 Zebedee Mason.
 // </copyright>
 //------------------------------------------------------------------------------
 
@@ -8,16 +8,16 @@ namespace CMakeParser.Core
 {
     using System.Collections.Generic;
 
-    public class AddBinary : ICommand
+    public class TargetLinkLibraries : ICommand
     {
         public interface IHandler
         {
-            void Add(string command, string name, State state, IEnumerable<string> filePaths);
+            void AddLibrariesToBinary(string name, IEnumerable<string> libraries);
         }
 
         private readonly IHandler _handler;
 
-        public AddBinary(IHandler handler)
+        public TargetLinkLibraries(IHandler handler)
         {
             _handler = handler;
         }
@@ -30,8 +30,8 @@ namespace CMakeParser.Core
         {
             var pair = Utilities.Split(command.Value);
             var name = state.Replace(pair.Key);
-            var files = state.FileOrDirectoryList(pair.Value.Replace(" SHARED ", " ").Replace(" STATIC ", " "));
-            _handler.Add(command.Key, name, state, files);
+            var libraries = state.FileOrDirectoryList(pair.Value.Replace(" PUBLIC ", " "));
+            _handler.AddLibrariesToBinary(name, libraries);
         }
     }
 }

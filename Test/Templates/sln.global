@@ -1,0 +1,4 @@
+		{{{guid}}}.Debug|x64.ActiveCfg = Debug|x64
+		{{{guid}}}.Debug|x64.Build.0 = Debug|x64
+		{{{guid}}}.Release|x64.ActiveCfg = Release|x64
+		{{{guid}}}.Release|x64.Build.0 = Release|x64

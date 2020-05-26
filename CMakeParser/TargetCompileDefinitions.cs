@@ -1,6 +1,6 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="AddBinary.cs" company="Zebedee Mason">
-//     Copyright (c) 2019-2020 Zebedee Mason.
+// <copyright file="TargetCompileDefinitions.cs" company="Zebedee Mason">
+//     Copyright (c) 2020 Zebedee Mason.
 // </copyright>
 //------------------------------------------------------------------------------
 
@@ -8,16 +8,16 @@ namespace CMakeParser.Core
 {
     using System.Collections.Generic;
 
-    public class AddBinary : ICommand
+    public class TargetCompileDefinitions : ICommand
     {
         public interface IHandler
         {
-            void Add(string command, string name, State state, IEnumerable<string> filePaths);
+            void AddCompileDefinitionsToBinary(string name, string library);
         }
 
         private readonly IHandler _handler;
 
-        public AddBinary(IHandler handler)
+        public TargetCompileDefinitions(IHandler handler)
         {
             _handler = handler;
         }
@@ -30,8 +30,11 @@ namespace CMakeParser.Core
         {
             var pair = Utilities.Split(command.Value);
             var name = state.Replace(pair.Key);
-            var files = state.FileOrDirectoryList(pair.Value.Replace(" SHARED ", " ").Replace(" STATIC ", " "));
-            _handler.Add(command.Key, name, state, files);
+
+            var list = pair.Value.Replace(" INTERFACE ", " ");
+            list = list.Replace(" PUBLIC ", " ");
+            list = list.Replace(" PRIVATE ", " ");
+            _handler.AddCompileDefinitionsToBinary(name, list);
         }
     }
 }

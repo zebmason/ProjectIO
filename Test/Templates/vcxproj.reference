@@ -1,0 +1,3 @@
+    <ProjectReference Include="..\{{name}}\{{name}}.vcxproj">
+      <Project>{{{guid}}}</Project>
+    </ProjectReference>

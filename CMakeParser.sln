@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMakeLister", "CMakeLister\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{63477A77-77B1-4987-BFFF-EA8A5BC2FC75}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualStudio", "VisualStudio\VisualStudio.csproj", "{6BFA2CA1-9119-4104-A081-011E1D038A22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{543A7173-C259-4C56-865C-8E8E43D5D59D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{63477A77-77B1-4987-BFFF-EA8A5BC2FC75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63477A77-77B1-4987-BFFF-EA8A5BC2FC75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63477A77-77B1-4987-BFFF-EA8A5BC2FC75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BFA2CA1-9119-4104-A081-011E1D038A22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BFA2CA1-9119-4104-A081-011E1D038A22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BFA2CA1-9119-4104-A081-011E1D038A22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BFA2CA1-9119-4104-A081-011E1D038A22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{543A7173-C259-4C56-865C-8E8E43D5D59D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{543A7173-C259-4C56-865C-8E8E43D5D59D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{543A7173-C259-4C56-865C-8E8E43D5D59D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{543A7173-C259-4C56-865C-8E8E43D5D59D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

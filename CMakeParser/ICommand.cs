@@ -4,7 +4,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace CMakeParser.Command
+namespace CMakeParser.Core
 {
     using System.Collections.Generic;
 
@@ -14,11 +14,6 @@ namespace CMakeParser.Command
 
         void Command(KeyValuePair<string, string> command, State state);
     }
-}
-
-namespace CMakeParser
-{
-    using System.Collections.Generic;
 
     public interface ILogger
     {
