@@ -12,7 +12,7 @@ namespace CMakeParser.Test
 
     class Utilities
     {
-        class Writer : Program.IWriter
+        class Writer : Lister.Program.IWriter
         {
             private readonly System.IO.StringWriter _writer = new System.IO.StringWriter();
 
@@ -103,7 +103,7 @@ namespace CMakeParser.Test
         internal void Eval(string result)
         {
             var writer = new Writer();
-            Program.MainFunc(_args.ToArray(), writer);
+            Lister.Program.MainFunc(_args.ToArray(), writer);
 
             Delete(result);
             _lines = writer.Buffer.Replace(Combine("Source"), "${SourceDirec}").Replace(Combine("Binary"), "${BinaryDirec}").Replace("/", "\\");

@@ -7,8 +7,8 @@
     <ProjectGuid>{6E9B242F-3935-4C65-A01E-1B5A5AB4CB3A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CMakeParser</RootNamespace>
-    <AssemblyName>CMakeParser</AssemblyName>
+    <RootNamespace>CMakeParser.Parser</RootNamespace>
+    <AssemblyName>CMakeParser.Parser</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -52,6 +52,7 @@
     <Compile Include="SourceGroup.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\SharedAssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

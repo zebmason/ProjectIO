@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CMakeParser
+namespace CMakeParser.Lister
 {
     public class Program
     {
