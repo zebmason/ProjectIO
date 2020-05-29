@@ -45,6 +45,8 @@ namespace CMakeParser.VisualStudio
                     }
                 }
             }
+            else
+                printUsage = true;
 
             if (args.Length > 3 && System.IO.Path.GetFileName(args[3]) != "CMakeCache.txt" && System.IO.File.Exists(args[3]))
             {

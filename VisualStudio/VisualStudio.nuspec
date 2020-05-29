@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">LGPL-2.1-only</license>
+    <projectUrl>https://github.com/zebmason/CMakeParser</projectUrl>
+    <description>A tool to create a Visual Studio solution from a CMake project.</description>
+    <releaseNotes>First release.</releaseNotes>
+    <copyright>Copyright 2020</copyright>
+    <tags>CMake c++</tags>
+    <dependencies>
+      <group targetFramework=".NETFramework4.5.2" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\Test\Data\Templates\sln" target="Templates\sln"/>
+    <file src="..\Test\Data\Templates\sln.global" target="Templates\sln.global"/>
+    <file src="..\Test\Data\Templates\sln.project" target="Templates\sln.project"/>
+    <file src="..\Test\Data\Templates\vcxproj" target="Templates\vcxproj"/>
+    <file src="..\Test\Data\Templates\vcxproj.compile" target="Templates\vcxproj.compile"/>
+    <file src="..\Test\Data\Templates\vcxproj.console" target="Templates\vcxproj.console"/>
+    <file src="..\Test\Data\Templates\vcxproj.filters" target="Templates\vcxproj.filters"/>
+    <file src="..\Test\Data\Templates\vcxproj.filters.compile" target="Templates\vcxproj.filters.compile"/>
+    <file src="..\Test\Data\Templates\vcxproj.filters.filter" target="Templates\vcxproj.filters.filter"/>
+    <file src="..\Test\Data\Templates\vcxproj.reference" target="Templates\vcxproj.reference"/>
+  </files>
+</package>
