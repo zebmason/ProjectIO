@@ -1,0 +1,2 @@
+//Value Computed by CMake
+CMAKE_PROJECT_NAME:STATIC=ConfigureFile

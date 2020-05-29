@@ -10,28 +10,28 @@ namespace CMakeParser.Test
 
     using System.Collections.Generic;
 
-    class Utilities
+    class Writer : Common.IWriter
     {
-        class Writer : Common.IWriter
+        private readonly System.IO.StringWriter _writer = new System.IO.StringWriter();
+
+        public void WriteLine(string line)
         {
-            private readonly System.IO.StringWriter _writer = new System.IO.StringWriter();
-
-            public void WriteLine(string line)
-            {
-                _writer.WriteLine(line);
-            }
-
-            public string Buffer
-            {
-                get { return _writer.ToString(); }
-            }
+            _writer.WriteLine(line);
         }
 
+        public string Buffer
+        {
+            get { return _writer.ToString(); }
+        }
+    }
+
+    class Utilities
+    {
         private readonly string _dataDirec;
 
-        private readonly List<string> _args = new List<string>();
+        protected readonly List<string> _args = new List<string>();
 
-        private string _lines;
+        protected string _lines;
 
         internal Utilities(string testDirec = @"../../Data")
         {
@@ -46,7 +46,7 @@ namespace CMakeParser.Test
             return System.IO.Path.Combine(_dataDirec, fileName);
         }
 
-        private void CompareLines(string lines, string expected)
+        internal void CompareLines(string lines, string expected)
         {
             lines = lines.Replace("\r", string.Empty);
             expected = expected.Replace("\r", string.Empty);
@@ -99,7 +99,10 @@ namespace CMakeParser.Test
                 System.IO.File.Delete(fileName);
             }
         }
+    }
 
+    class ListerUtilities : Utilities
+    {
         internal void Eval(string result)
         {
             var writer = new Writer();
@@ -112,8 +115,10 @@ namespace CMakeParser.Test
             file.Close();
         }
 
-        public Utilities ConstructRead(string sourceDirec, string binaryDirec)
+        public ListerUtilities ConstructRead(string direc)
         {
+            string sourceDirec = System.IO.Path.Combine("Source", direc);
+            string binaryDirec = System.IO.Path.Combine("Binary", direc);
             _args.Clear();
             _args.Add(Combine(sourceDirec));
             if (binaryDirec.Length > 0)
@@ -124,12 +129,108 @@ namespace CMakeParser.Test
 
         public static void ReadTest(string direc)
         {
-            var utils = new Utilities();
+            var utils = new ListerUtilities();
             var result = System.IO.Path.Combine("Results", direc) + ".log";
-            utils.ConstructRead(System.IO.Path.Combine("Source", direc), System.IO.Path.Combine("Binary", direc)).Eval(result);
+            utils.ConstructRead(direc).Eval(result);
 
             var processed = System.IO.Path.Combine("Processed", direc) + ".log";
             utils.CompareLogs(processed);
+        }
+    }
+
+    class VSUtilities : Utilities
+    {
+        internal void Eval(string result)
+        {
+            var writer = new Writer();
+            VisualStudio.Program.MainFunc(_args.ToArray(), writer);
+
+            Delete(result);
+            _lines = writer.Buffer.Replace(Combine("Source"), "${SourceDirec}").Replace(Combine("Binary"), "${BinaryDirec}").Replace("/", "\\");
+            var file = new System.IO.StreamWriter(Combine(result));
+            file.Write(_lines);
+            file.Close();
+        }
+
+        public VSUtilities ConstructRead(string direc)
+        {
+            string cmakeLists = System.IO.Path.Combine(System.IO.Path.Combine("Source", direc), "CMakeLists.txt");
+            string cmakeCache = System.IO.Path.Combine(System.IO.Path.Combine("Binary", direc), "CMakeCache.txt");
+            _args.Clear();
+            _args.Add(Combine("Results"));
+            _args.Add(Combine("Templates"));
+            _args.Add(Combine(cmakeLists));
+            _args.Add(Combine(cmakeCache));
+
+            return this;
+        }
+
+        internal string StripGuids(string lines)
+        {
+            int i = 0;
+            while ((i = lines.IndexOf('{', i)) != -1)
+            {
+                int j = i + 37;
+                if (j >= lines.Length)
+                    break;
+
+                if (lines[j] == '}')
+                {
+                    lines = lines.Substring(0, i + 1) + lines.Substring(j);
+                }
+
+                ++i;
+            }
+            return lines;
+        }
+
+        internal void CompareFiles(string result, string processed, string replace = "", string with = "")
+        {
+            result = this.Combine(result);
+            if (!System.IO.File.Exists(result))
+            {
+                result.Should().Be("Not missing!");
+            }
+
+            processed = this.Combine(processed);
+            if (!System.IO.File.Exists(processed))
+            {
+                processed.Should().Be("Not missing!");
+            }
+
+            var lines = System.IO.File.ReadAllText(result);
+            if (replace.Length > 0)
+                lines = lines.Replace(replace, with);
+
+            var expected = System.IO.File.ReadAllText(processed);
+            CompareLines(StripGuids(lines), StripGuids(expected));
+        }
+
+        public static void ReadTest(string direc, IEnumerable<string> projects)
+        {
+            var utils = new VSUtilities();
+            var result = System.IO.Path.Combine("Results", direc) + ".vs.log";
+            utils.ConstructRead(direc).Eval(result);
+
+            var processed = System.IO.Path.Combine("Processed", direc) + ".vs.log";
+            utils.CompareLogs(processed);
+
+            result = System.IO.Path.Combine("Results", direc) + ".sln";
+            processed = System.IO.Path.Combine("Processed", direc) + ".sln";
+            utils.CompareFiles(result, processed);
+
+            foreach(var project in projects)
+            {
+                var replace = utils.Combine("");
+
+                result = System.IO.Path.Combine(System.IO.Path.Combine("Results", project), project) + ".vcxproj";
+                processed = System.IO.Path.Combine(System.IO.Path.Combine("Processed", project), project) + ".vcxproj";
+                utils.CompareFiles(result, processed, replace, "..\\..");
+
+                result += ".filters";
+                processed += ".filters";
+                utils.CompareFiles(result, processed, replace, "..\\..");
+            }
         }
     }
 }

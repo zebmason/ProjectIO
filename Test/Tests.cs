@@ -8,19 +8,27 @@ namespace CMakeParser.Test
 {
     using NUnit.Framework;
 
+    using System.Collections.Generic;
+
     [TestFixture]
     public class Tests
     {
         [Test]
         public void SourceGroups()
         {
-            Utilities.ReadTest(@"SourceGroups");
+            ListerUtilities.ReadTest(@"SourceGroups");
         }
 
         [Test]
         public void ConfigureFile()
         {
-            Utilities.ReadTest(@"ConfigureFile");
+            ListerUtilities.ReadTest(@"ConfigureFile");
+        }
+
+        [Test]
+        public void VisualStudio()
+        {
+            VSUtilities.ReadTest(@"ConfigureFile", new List<string> { "lib" });
         }
     }
 }
