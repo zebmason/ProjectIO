@@ -127,11 +127,11 @@ namespace CMakeParser.Common
 
             lists.AddCommand("file", new Core.File(log));
 
-            lists.AddCommand("source_group", new Core.SourceGroup(new SourceGroupHandler(filters)));
+            lists.AddCommand("source_group", new Core.SourceGroup(new SourceGroupHandler(filters), log));
 
             lists.AddCommand("include_directories", new Core.IncludeDirectories());
 
-            lists.AddCommand("get_filename_component", new Core.GetFileNameComponent());
+            lists.AddCommand("get_filename_component", new Core.GetFileNameComponent(log));
 
             lists.AddCommand("add_compile_definitions", new Core.AddCompileDefinitions());
 

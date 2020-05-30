@@ -17,9 +17,12 @@ namespace CMakeParser.Core
 
         private readonly IHandler _handler;
 
-        public SourceGroup(IHandler handler)
+        private readonly ILogger _logger;
+
+        public SourceGroup(IHandler handler, ILogger logger)
         {
             _handler = handler;
+            _logger = logger;
         }
 
         public void Initialise(State state)
@@ -81,7 +84,11 @@ namespace CMakeParser.Core
                 {
                     _handler.AddFile(file, filter);
                 }
+
+                return;
             }
+
+            _logger.Unhandled(command, state);
         }
     }
 }

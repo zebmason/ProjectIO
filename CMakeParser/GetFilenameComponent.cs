@@ -10,6 +10,13 @@ namespace CMakeParser.Core
 
     public class GetFileNameComponent : ICommand
     {
+        private readonly ILogger _logger;
+
+        public GetFileNameComponent(ILogger logger)
+        {
+            _logger = logger;
+        }
+
         public void Initialise(State state)
         {
         }
@@ -26,6 +33,8 @@ namespace CMakeParser.Core
                 state.Variables["${" + pair.Key + "}"] = name;
                 return;
             }
+
+            _logger.Unhandled(command, state);
         }
     }
 }

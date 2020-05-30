@@ -73,7 +73,7 @@ namespace CMakeParser.Lister
 
             lists.AddCommand("file", new Core.File(log));
 
-            lists.AddCommand("source_group", new Core.SourceGroup(new SourceGroupHandler(writer)));
+            lists.AddCommand("source_group", new Core.SourceGroup(new SourceGroupHandler(writer), log));
 
             lists.AddCommand("include_directories", new Core.IncludeDirectories());
 
