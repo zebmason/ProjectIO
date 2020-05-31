@@ -11,9 +11,7 @@ namespace CMakeParser.Common
 
     public class Binary
     {
-        private readonly IWriter _writer;
-
-        public bool IsExe { get; }
+        public bool IsExe { get; set; } = false;
 
         public List<string> FilePaths { get; } = new List<string>();
 
@@ -22,13 +20,6 @@ namespace CMakeParser.Common
         public string CompileDefinitions { get; set; } = string.Empty;
 
         public List<string> IncludeDirectories { get; } = new List<string>();
-
-        public Binary(IWriter writer, Dictionary<string, string> properties, bool isExe)
-        {
-            _writer = writer;
-            CompileDefinitions = properties["COMPILE_DEFINITIONS"];
-            IsExe = isExe;
-        }
 
         public static bool IsHeader(string fileName)
         {

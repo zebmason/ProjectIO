@@ -25,10 +25,11 @@ namespace CMakeParser.Common
 
             public void Add(string command, string name, Core.State state, IEnumerable<string> filePaths)
             {
-                if (command == "add_library")
-                    _binaries[name] = new Binary(_writer, state.Properties, false);
-                else
-                    _binaries[name] = new Binary(_writer, state.Properties, true);
+                _binaries[name] = new Binary
+                {
+                    CompileDefinitions = state.Properties["COMPILE_DEFINITIONS"],
+                    IsExe = command != "add_library"
+                };
 
                 _binaries[name].IncludeDirectories.AddRange(state.IncludeDirectories);
                 _binaries[name].FilePaths.AddRange(filePaths);
