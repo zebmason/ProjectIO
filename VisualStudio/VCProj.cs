@@ -121,7 +121,7 @@ namespace ProjectIO.VisualStudio
         {
             var proj = new VCProj(new ProjectPath(filePath, sourceDirec));
 
-            projects[proj.Name] = new Core.Project();
+            projects[proj.Name] = new Core.Project("C++");
             projects[proj.Name].IncludeDirectories.AddRange(proj.Includes());
             foreach (var dep in proj.Dependencies())
             {

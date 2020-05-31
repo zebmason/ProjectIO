@@ -84,7 +84,7 @@ namespace ProjectIO.CMakeParser
                         bits[i] = "TRUE";
                     else
                     {
-                        _logger.Message(string.Format("Skipping {0}({1}) at {2}", command.Key, command.Value, bits[i]), _state);
+                        _logger.Warn(string.Format("Skipping {0}({1}) at {2}", command.Key, command.Value, bits[i]), _state);
                         return false;
                     }
                 }
@@ -111,7 +111,7 @@ namespace ProjectIO.CMakeParser
 
                 if (bits.Count != 1)
                 {
-                    _logger.Message(string.Format("Skipping {0}({1}) == {2}", command.Key, command.Value, string.Join(" ", bits)), _state);
+                    _logger.Warn(string.Format("Skipping {0}({1}) == {2}", command.Key, command.Value, string.Join(" ", bits)), _state);
                     return false;
                 }
 
@@ -241,7 +241,7 @@ namespace ProjectIO.CMakeParser
                     continue;
                 }
 
-                _logger.Message(string.Format("Skipping {0}", line), _state);
+                _logger.Info(string.Format("Skipping {0}", line), _state);
             }
         }
     }

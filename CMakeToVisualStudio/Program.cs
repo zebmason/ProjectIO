@@ -10,27 +10,27 @@ namespace ProjectIO.CMakeToVisualStudio
 
     public class Program
     {
-        public static void MainFunc(string[] args, CMakeParser.IWriter writer)
+        public static void MainFunc(string[] args, Core.ILogger logger)
         {
-            writer.WriteLine("CMakeParser command line application for creating a Visual Studio solution");
-            writer.WriteLine("Copyright (c) 2020 Zebedee Mason");
+            logger.Info("CMakeParser command line application for creating a Visual Studio solution");
+            logger.Info("Copyright (c) 2020 Zebedee Mason");
 
             bool printUsage = false;
             if (args.Length > 2)
             {
                 if (!System.IO.Directory.Exists(args[0]))
                 {
-                    writer.WriteLine("First argument is not an output directory");
+                    logger.Info("First argument is not an output directory");
                     printUsage = true;
                 }
                 else if (!System.IO.Directory.Exists(args[1]))
                 {
-                    writer.WriteLine("Second argument is not a template directory");
+                    logger.Info("Second argument is not a template directory");
                     printUsage = true;
                 }
                 else if (System.IO.Path.GetFileName(args[2]) != "CMakeLists.txt" && System.IO.File.Exists(args[2]))
                 {
-                    writer.WriteLine("Third argument is not an existing CMakeLists.txt");
+                    logger.Info("Third argument is not an existing CMakeLists.txt");
                     printUsage = true;
                 }
                 else
@@ -39,7 +39,7 @@ namespace ProjectIO.CMakeToVisualStudio
                     {
                         if (!System.IO.File.Exists(System.IO.Path.Combine(args[1], fileName)))
                         {
-                            writer.WriteLine(string.Format("Second argument is not a directory containing {0}", fileName));
+                            logger.Info(string.Format("Second argument is not a directory containing {0}", fileName));
                             printUsage = true;
                         }
                     }
@@ -50,15 +50,15 @@ namespace ProjectIO.CMakeToVisualStudio
 
             if (args.Length > 3 && System.IO.Path.GetFileName(args[3]) != "CMakeCache.txt" && System.IO.File.Exists(args[3]))
             {
-                writer.WriteLine("Fourth argument is not an existing CMakeCache.txt");
+                logger.Info("Fourth argument is not an existing CMakeCache.txt");
                 printUsage = true;
             }
 
             if (printUsage)
             {
-                writer.WriteLine("Create a Visual Studio solution");
-                writer.WriteLine("Usage:");
-                writer.WriteLine("  CMakeParser.VisualStudio.exe <output directory> <template directory> <CMakeLists.txt> [CMakeCache.txt]");
+                logger.Info("Create a Visual Studio solution");
+                logger.Info("Usage:");
+                logger.Info("  CMakeParser.VisualStudio.exe <output directory> <template directory> <CMakeLists.txt> [CMakeCache.txt]");
                 return;
             }
 
@@ -72,7 +72,7 @@ namespace ProjectIO.CMakeToVisualStudio
 
             var binaries = new Dictionary<string, Core.Project>();
             var filters = new Dictionary<string, string>();
-            var builder = CMakeParser.Builder.Instance(state, binaries, filters, writer);
+            var builder = CMakeParser.Builder.Instance(state, binaries, filters, logger);
             builder.Read();
 
             var solutionName = "solution";
@@ -85,7 +85,7 @@ namespace ProjectIO.CMakeToVisualStudio
 
         static void Main(string[] args)
         {
-            MainFunc(args, new CMakeParser.Writer());
+            MainFunc(args, new Core.PlainConsoleLogger());
         }
     }
 }

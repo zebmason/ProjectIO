@@ -12,19 +12,19 @@ namespace ProjectIO.CMakeParser
     {
         public class AddBinaryHandler : AddBinary.IHandler
         {
-            private readonly IWriter _writer;
+            private readonly Core.ILogger _logger;
 
             private readonly Dictionary<string, Core.Project> _binaries;
 
-            public AddBinaryHandler(IWriter writer, Dictionary<string, Core.Project> binaries)
+            public AddBinaryHandler(Core.ILogger logger, Dictionary<string, Core.Project> binaries)
             {
-                _writer = writer;
+                _logger = logger;
                 _binaries = binaries;
             }
 
             public void Add(string command, string name, State state, IEnumerable<string> filePaths)
             {
-                _binaries[name] = new Core.Project
+                _binaries[name] = new Core.Project("C++")
                 {
                     CompileDefinitions = state.Properties["COMPILE_DEFINITIONS"],
                     IsExe = command != "add_library"
@@ -95,12 +95,12 @@ namespace ProjectIO.CMakeParser
             }
         }
 
-        public static CMakeLists Instance(State state, Dictionary<string, Core.Project> binaries, Dictionary<string, string> filters, IWriter writer)
+        public static CMakeLists Instance(State state, Dictionary<string, Core.Project> binaries, Dictionary<string, string> filters, Core.ILogger logger)
         {
-            var log = new Logger(writer);
+            var log = new Logger(logger);
             var lists = new CMakeLists(state, log);
 
-            var addBinary = new AddBinary(new AddBinaryHandler(writer, binaries));
+            var addBinary = new AddBinary(new AddBinaryHandler(logger, binaries));
             var binaryCommands = new string[] { "add_executable", "add_library", "catkin_add_gtest" };
             foreach (var command in binaryCommands)
             {

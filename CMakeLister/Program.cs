@@ -12,11 +12,11 @@ namespace ProjectIO.CMakeLister
     {
         public class AddBinaryHandler : CMakeParser.AddBinary.IHandler
         {
-            private readonly CMakeParser.IWriter _writer;
+            private readonly Core.ILogger _logger;
 
-            public AddBinaryHandler(CMakeParser.IWriter writer)
+            public AddBinaryHandler(Core.ILogger logger)
             {
-                _writer = writer;
+                _logger = logger;
             }
 
             public void Add(string command, string name, CMakeParser.State state, IEnumerable<string> filePaths)
@@ -25,11 +25,11 @@ namespace ProjectIO.CMakeLister
                 {
                     if (System.IO.File.Exists(filePath))
                     {
-                        _writer.WriteLine(string.Format("[{0}] Adding {1} to {2}", state.Variables["${CMAKE_CURRENT_SOURCE_DIR}"], filePath, name));
+                        _logger.Info(string.Format("[{0}] Adding {1} to {2}", state.Variables["${CMAKE_CURRENT_SOURCE_DIR}"], filePath, name));
                     }
                     else
                     {
-                        _writer.WriteLine(string.Format("[{0}] Not adding {1} to {2}", state.Variables["${CMAKE_CURRENT_SOURCE_DIR}"], filePath, name));
+                        _logger.Warn(string.Format("[{0}] Not adding {1} to {2}", state.Variables["${CMAKE_CURRENT_SOURCE_DIR}"], filePath, name));
                     }
                 }
             }
@@ -37,25 +37,25 @@ namespace ProjectIO.CMakeLister
 
         public class SourceGroupHandler : CMakeParser.SourceGroup.IHandler
         {
-            private readonly CMakeParser.IWriter _writer;
+            private readonly Core.ILogger _logger;
 
-            public SourceGroupHandler(CMakeParser.IWriter writer)
+            public SourceGroupHandler(Core.ILogger logger)
             {
-                _writer = writer;
+                _logger = logger;
             }
 
             public void AddFile(string filePath, string filter)
             {
-                _writer.WriteLine(string.Format("Setting {0} to filter {1}", filePath, filter));
+                _logger.Info(string.Format("Setting {0} to filter {1}", filePath, filter));
             }
         }
 
-        public static CMakeParser.CMakeLists Instance(CMakeParser.State state, CMakeParser.IWriter writer)
+        public static CMakeParser.CMakeLists Instance(CMakeParser.State state, Core.ILogger logger)
         {
-            var log = new CMakeParser.Logger(writer);
+            var log = new CMakeParser.Logger(logger);
             var lists = new CMakeParser.CMakeLists(state, log);
 
-            var addBinary = new CMakeParser.AddBinary(new AddBinaryHandler(writer));
+            var addBinary = new CMakeParser.AddBinary(new AddBinaryHandler(logger));
             var binaryCommands = new string[] { "add_executable", "add_library", "catkin_add_gtest" };
             foreach (var command in binaryCommands)
             {
@@ -73,23 +73,23 @@ namespace ProjectIO.CMakeLister
 
             lists.AddCommand("file", new CMakeParser.File(log));
 
-            lists.AddCommand("source_group", new CMakeParser.SourceGroup(new SourceGroupHandler(writer), log));
+            lists.AddCommand("source_group", new CMakeParser.SourceGroup(new SourceGroupHandler(logger), log));
 
             lists.AddCommand("include_directories", new CMakeParser.IncludeDirectories());
 
             return lists;
         }
 
-        public static void MainFunc(string[] args, CMakeParser.IWriter writer)
+        public static void MainFunc(string[] args, Core.ILogger logger)
         {
             var state = new CMakeParser.State(args[0], (args.Length > 1) ? args[1] : string.Empty);
-            var cmake = Instance(state, writer);
+            var cmake = Instance(state, logger);
             cmake.Read();
         }
 
         static void Main(string[] args)
         {
-            MainFunc(args, new CMakeParser.Writer());
+            MainFunc(args, new Core.PlainConsoleLogger());
         }
     }
 }

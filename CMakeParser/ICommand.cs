@@ -17,7 +17,9 @@ namespace ProjectIO.CMakeParser
 
     public interface ILogger
     {
-        void Message(string message, State state);
+        void Info(string message, State state);
+
+        void Warn(string message, State state);
 
         void Unhandled(KeyValuePair<string, string> command, State state);
     }

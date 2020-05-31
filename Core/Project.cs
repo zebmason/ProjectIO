@@ -21,6 +21,13 @@ namespace ProjectIO.Core
 
         public List<string> IncludeDirectories { get; } = new List<string>();
 
+        public string Language { get; }
+
+        public Project(string language)
+        {
+            Language = language;
+        }
+
         public static bool IsHeader(string fileName)
         {
             var exts = new string[] { ".h", ".hh", ".hpp", ".hxx", ".h++" };

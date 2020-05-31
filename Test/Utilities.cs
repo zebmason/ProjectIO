@@ -10,13 +10,28 @@ namespace ProjectIO.Test
 
     using System.Collections.Generic;
 
-    class Writer : CMakeParser.IWriter
+    class Writer : Core.ILogger
     {
         private readonly System.IO.StringWriter _writer = new System.IO.StringWriter();
 
-        public void WriteLine(string line)
+        public void Info(string line)
         {
             _writer.WriteLine(line);
+        }
+
+        public void Info(string message, string argument)
+        {
+            _writer.WriteLine(string.Format(message, argument));
+        }
+
+        public void Warn(string line)
+        {
+            _writer.WriteLine(line);
+        }
+
+        public void Warn(string message, string argument)
+        {
+            _writer.WriteLine(string.Format(message, argument));
         }
 
         public string Buffer

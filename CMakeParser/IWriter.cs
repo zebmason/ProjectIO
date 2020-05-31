@@ -6,39 +6,30 @@
 
 namespace ProjectIO.CMakeParser
 {
-    using System;
     using System.Collections.Generic;
 
-    public interface IWriter
+    public class Logger : ILogger
     {
-        void WriteLine(string line);
-    }
+        private readonly Core.ILogger _logger;
 
-    public class Writer : IWriter
-    {
-        public void WriteLine(string line)
+        public Logger(Core.ILogger logger)
         {
-            Console.WriteLine(line);
-        }
-    }
-
-    public class Logger : CMakeParser.ILogger
-    {
-        private readonly IWriter _writer;
-
-        public Logger(IWriter writer)
-        {
-            _writer = writer;
+            _logger = logger;
         }
 
-        public void Message(string message, CMakeParser.State state)
+        public void Info(string message, CMakeParser.State state)
         {
-            _writer.WriteLine(string.Format("[{0}] {1}", state.Variables["${CMAKE_CURRENT_SOURCE_DIR}"], message));
+            _logger.Info(string.Format("[{0}] {1}", state.Variables["${CMAKE_CURRENT_SOURCE_DIR}"], message));
+        }
+
+        public void Warn(string message, CMakeParser.State state)
+        {
+            _logger.Warn(string.Format("[{0}] {1}", state.Variables["${CMAKE_CURRENT_SOURCE_DIR}"], message));
         }
 
         public void Unhandled(KeyValuePair<string, string> command, CMakeParser.State state)
         {
-            _writer.WriteLine(string.Format("[{0}] Unhandled {1}({2})", state.Variables["${CMAKE_CURRENT_SOURCE_DIR}"], command.Key, command.Value));
+            _logger.Warn(string.Format("[{0}] Unhandled {1}({2})", state.Variables["${CMAKE_CURRENT_SOURCE_DIR}"], command.Key, command.Value));
         }
     }
 }
