@@ -4,7 +4,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace CMakeParser.Core
+namespace ProjectIO.CMakeParser
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -15,7 +15,7 @@ namespace CMakeParser.Core
 
         private State _state;
 
-        private readonly Dictionary<string, Core.ICommand> _commands = new Dictionary<string, Core.ICommand>();
+        private readonly Dictionary<string, CMakeParser.ICommand> _commands = new Dictionary<string, CMakeParser.ICommand>();
 
         public CMakeLists(State state, ILogger notHandled)
         {
@@ -23,7 +23,7 @@ namespace CMakeParser.Core
             _logger = notHandled;
         }
 
-        public void AddCommand(string name, Core.ICommand command)
+        public void AddCommand(string name, CMakeParser.ICommand command)
         {
             command.Initialise(_state);
             _commands[name] = command;

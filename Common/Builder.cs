@@ -4,28 +4,27 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace CMakeParser.Common
+namespace ProjectIO.CMakeParser
 {
     using System.Collections.Generic;
-    using System.Linq;
 
     public class Builder
     {
-        public class AddBinaryHandler : Core.AddBinary.IHandler
+        public class AddBinaryHandler : AddBinary.IHandler
         {
             private readonly IWriter _writer;
 
-            private readonly Dictionary<string, Binary> _binaries;
+            private readonly Dictionary<string, Core.Project> _binaries;
 
-            public AddBinaryHandler(IWriter writer, Dictionary<string, Binary> binaries)
+            public AddBinaryHandler(IWriter writer, Dictionary<string, Core.Project> binaries)
             {
                 _writer = writer;
                 _binaries = binaries;
             }
 
-            public void Add(string command, string name, Core.State state, IEnumerable<string> filePaths)
+            public void Add(string command, string name, State state, IEnumerable<string> filePaths)
             {
-                _binaries[name] = new Binary
+                _binaries[name] = new Core.Project
                 {
                     CompileDefinitions = state.Properties["COMPILE_DEFINITIONS"],
                     IsExe = command != "add_library"
@@ -36,11 +35,11 @@ namespace CMakeParser.Common
             }
         }
 
-        public class TargetLinkLibrariesHandler : Core.TargetLinkLibraries.IHandler
+        public class TargetLinkLibrariesHandler : TargetLinkLibraries.IHandler
         {
-            private readonly Dictionary<string, Binary> _binaries;
+            private readonly Dictionary<string, Core.Project> _binaries;
 
-            public TargetLinkLibrariesHandler(Dictionary<string, Binary> binaries)
+            public TargetLinkLibrariesHandler(Dictionary<string, Core.Project> binaries)
             {
                 _binaries = binaries;
             }
@@ -51,11 +50,11 @@ namespace CMakeParser.Common
             }
         }
 
-        public class TargetCompileDefinitionsHandler : Core.TargetCompileDefinitions.IHandler
+        public class TargetCompileDefinitionsHandler : TargetCompileDefinitions.IHandler
         {
-            private readonly Dictionary<string, Binary> _binaries;
+            private readonly Dictionary<string, Core.Project> _binaries;
 
-            public TargetCompileDefinitionsHandler(Dictionary<string, Binary> binaries)
+            public TargetCompileDefinitionsHandler(Dictionary<string, Core.Project> binaries)
             {
                 _binaries = binaries;
             }
@@ -66,11 +65,11 @@ namespace CMakeParser.Common
             }
         }
 
-        public class TargetIncludeDirectoriesHandler : Core.TargetIncludeDirectories.IHandler
+        public class TargetIncludeDirectoriesHandler : TargetIncludeDirectories.IHandler
         {
-            private readonly Dictionary<string, Binary> _binaries;
+            private readonly Dictionary<string, Core.Project> _binaries;
 
-            public TargetIncludeDirectoriesHandler(Dictionary<string, Binary> binaries)
+            public TargetIncludeDirectoriesHandler(Dictionary<string, Core.Project> binaries)
             {
                 _binaries = binaries;
             }
@@ -81,7 +80,7 @@ namespace CMakeParser.Common
             }
         }
 
-        public class SourceGroupHandler : Core.SourceGroup.IHandler
+        public class SourceGroupHandler : SourceGroup.IHandler
         {
             private readonly Dictionary<string, string> _filters;
 
@@ -96,45 +95,45 @@ namespace CMakeParser.Common
             }
         }
 
-        public static Core.CMakeLists Instance(Core.State state, Dictionary<string, Binary> binaries, Dictionary<string, string> filters, IWriter writer)
+        public static CMakeLists Instance(State state, Dictionary<string, Core.Project> binaries, Dictionary<string, string> filters, IWriter writer)
         {
             var log = new Logger(writer);
-            var lists = new Core.CMakeLists(state, log);
+            var lists = new CMakeLists(state, log);
 
-            var addBinary = new Core.AddBinary(new AddBinaryHandler(writer, binaries));
+            var addBinary = new AddBinary(new AddBinaryHandler(writer, binaries));
             var binaryCommands = new string[] { "add_executable", "add_library", "catkin_add_gtest" };
             foreach (var command in binaryCommands)
             {
                 lists.AddCommand(command, addBinary);
             }
 
-            var targetLinkLibraries = new Core.TargetLinkLibraries(new TargetLinkLibrariesHandler(binaries));
+            var targetLinkLibraries = new TargetLinkLibraries(new TargetLinkLibrariesHandler(binaries));
             lists.AddCommand("target_link_libraries", targetLinkLibraries);
 
-            var targetCompileDefinitions = new Core.TargetCompileDefinitions(new TargetCompileDefinitionsHandler(binaries));
+            var targetCompileDefinitions = new TargetCompileDefinitions(new TargetCompileDefinitionsHandler(binaries));
             lists.AddCommand("target_compile_definitions", targetCompileDefinitions);
 
-            var targetIncludeDirectories = new Core.TargetIncludeDirectories(new TargetIncludeDirectoriesHandler(binaries));
+            var targetIncludeDirectories = new TargetIncludeDirectories(new TargetIncludeDirectoriesHandler(binaries));
             lists.AddCommand("target_include_directories", targetIncludeDirectories);
 
-            var ignore = new Core.Ignore();
+            var ignore = new Ignore();
             var ignoreCommands = new string[] { "add_custom_target", "add_dependencies", "add_test", "cmake_minimum_required", "enable_testing", "fetchcontent_declare", "fetchcontent_getproperties", "find_package", "include", "option", "project" };
             foreach (var command in ignoreCommands)
             {
                 lists.AddCommand(command, ignore);
             }
 
-            lists.AddCommand("set", new Core.Set());
+            lists.AddCommand("set", new Set());
 
-            lists.AddCommand("file", new Core.File(log));
+            lists.AddCommand("file", new File(log));
 
-            lists.AddCommand("source_group", new Core.SourceGroup(new SourceGroupHandler(filters), log));
+            lists.AddCommand("source_group", new SourceGroup(new SourceGroupHandler(filters), log));
 
-            lists.AddCommand("include_directories", new Core.IncludeDirectories());
+            lists.AddCommand("include_directories", new IncludeDirectories());
 
-            lists.AddCommand("get_filename_component", new Core.GetFileNameComponent(log));
+            lists.AddCommand("get_filename_component", new GetFileNameComponent(log));
 
-            lists.AddCommand("add_compile_definitions", new Core.AddCompileDefinitions());
+            lists.AddCommand("add_compile_definitions", new AddCompileDefinitions());
 
             return lists;
         }

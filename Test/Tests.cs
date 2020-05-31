@@ -4,7 +4,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace CMakeParser.Test
+namespace ProjectIO.Test
 {
     using NUnit.Framework;
 

@@ -7,8 +7,8 @@
     <ProjectGuid>{6E9B242F-3935-4C65-A01E-1B5A5AB4CB3A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CMakeParser.Parser</RootNamespace>
-    <AssemblyName>CMakeParser.Parser</AssemblyName>
+    <RootNamespace>ProjectIO.CMakeParser</RootNamespace>
+    <AssemblyName>ProjectIO.CMakeParser</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{8E6161FC-E356-43D1-93A3-55131E382C4B}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>CMakeParser.Lister</RootNamespace>
-    <AssemblyName>CMakeParser.Lister</AssemblyName>
+    <RootNamespace>ProjectIO.CMakeLister</RootNamespace>
+    <AssemblyName>ProjectIO.CMakeLister</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

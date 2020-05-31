@@ -4,7 +4,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace CMakeParser.Common
+namespace ProjectIO.CMakeParser
 {
     using System;
     using System.Collections.Generic;
@@ -22,7 +22,7 @@ namespace CMakeParser.Common
         }
     }
 
-    public class Logger : Core.ILogger
+    public class Logger : CMakeParser.ILogger
     {
         private readonly IWriter _writer;
 
@@ -31,12 +31,12 @@ namespace CMakeParser.Common
             _writer = writer;
         }
 
-        public void Message(string message, Core.State state)
+        public void Message(string message, CMakeParser.State state)
         {
             _writer.WriteLine(string.Format("[{0}] {1}", state.Variables["${CMAKE_CURRENT_SOURCE_DIR}"], message));
         }
 
-        public void Unhandled(KeyValuePair<string, string> command, Core.State state)
+        public void Unhandled(KeyValuePair<string, string> command, CMakeParser.State state)
         {
             _writer.WriteLine(string.Format("[{0}] Unhandled {1}({2})", state.Variables["${CMAKE_CURRENT_SOURCE_DIR}"], command.Key, command.Value));
         }

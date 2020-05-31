@@ -4,12 +4,12 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace CMakeParser.VisualStudio
+namespace ProjectIO.CMakeToVisualStudio
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using CMakeParser.Common;
+    using ProjectIO.Core;
 
     public class Solution
     {
@@ -22,17 +22,17 @@ namespace CMakeParser.VisualStudio
 
         private Dictionary<string, string> _guids = new Dictionary<string, string>();
 
-        private readonly Dictionary<string, Common.Binary> _binaries;
+        private readonly Dictionary<string, Core.Project> _binaries;
 
         private readonly Dictionary<string, string> _filters;
 
-        public Solution(Dictionary<string, Common.Binary> binaries, Dictionary<string, string> filters)
+        public Solution(Dictionary<string, Core.Project> binaries, Dictionary<string, string> filters)
         {
             _binaries = binaries;
             _filters = filters;
         }
 
-        private static string Definitions(Common.Binary binary)
+        private static string Definitions(Core.Project binary)
         {
             var definitions = binary.CompileDefinitions.Split().ToList();
             if (binary.IsExe)
@@ -44,7 +44,7 @@ namespace CMakeParser.VisualStudio
             return string.Join(";", definitions) + ";";
         }
 
-        private static string IncludeDirectories(Common.Binary binary)
+        private static string IncludeDirectories(Core.Project binary)
         {
             if (binary.IncludeDirectories.Count == 0)
                 return string.Empty;
@@ -52,7 +52,7 @@ namespace CMakeParser.VisualStudio
             return string.Join(";", binary.IncludeDirectories) + ";";
         }
 
-        private string References(Common.Binary binary)
+        private string References(Core.Project binary)
         {
             var references = string.Empty;
             foreach (var library in binary.Libraries)
@@ -68,7 +68,7 @@ namespace CMakeParser.VisualStudio
             return references;
         }
 
-        private string Console(Common.Binary binary)
+        private string Console(Core.Project binary)
         {
             if (!binary.IsExe)
                 return string.Empty;
@@ -76,7 +76,7 @@ namespace CMakeParser.VisualStudio
             return _templates["vcxproj.console"];
         }
 
-        private string Libraries(Binary binary)
+        private string Libraries(Project binary)
         {
             if (binary.Libraries.Count == 0)
                 return string.Empty;
@@ -84,7 +84,7 @@ namespace CMakeParser.VisualStudio
             return string.Join(".lib;", binary.Libraries) + ".lib;";
         }
 
-        private void VCXProj(string name, Common.Binary binary, string directory)
+        private void VCXProj(string name, Core.Project binary, string directory)
         {
             var compiles = string.Empty;
             var includes = string.Empty;
@@ -92,7 +92,7 @@ namespace CMakeParser.VisualStudio
             {
                 var compile = _templates["vcxproj.compile"];
                 compile = compile.Replace("{{path}}", filePath);
-                if (Common.Binary.IsHeader(filePath))
+                if (Core.Project.IsHeader(filePath))
                     includes += compile.Replace("{{compile}}", "ClInclude");
                 else
                     compiles += compile.Replace("{{compile}}", "ClCompile");
@@ -127,7 +127,7 @@ namespace CMakeParser.VisualStudio
             maps.Add(filter);
         }
 
-        private void Filters(string name, Common.Binary binary, string directory)
+        private void Filters(string name, Core.Project binary, string directory)
         {
             var maps = new HashSet<string>();
             var compiles = string.Empty;
@@ -140,7 +140,7 @@ namespace CMakeParser.VisualStudio
                 AddFilter(_filters[filePath], maps);
                 var compile = _templates["vcxproj.filters.compile"];
                 compile = compile.Replace("{{path}}", filePath).Replace("{{filter}}", _filters[filePath]);
-                if (Common.Binary.IsHeader(filePath))
+                if (Core.Project.IsHeader(filePath))
                     includes += compile.Replace("{{compile}}", "ClInclude");
                 else
                     compiles += compile.Replace("{{compile}}", "ClCompile");

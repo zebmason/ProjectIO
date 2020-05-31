@@ -4,12 +4,12 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace CMakeParser.Common
+namespace ProjectIO.Core
 {
     using System.Collections.Generic;
     using System.Linq;
 
-    public class Binary
+    public class Project
     {
         public bool IsExe { get; set; } = false;
 

@@ -4,13 +4,13 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace CMakeParser.Test
+namespace ProjectIO.Test
 {
     using FluentAssertions;
 
     using System.Collections.Generic;
 
-    class Writer : Common.IWriter
+    class Writer : CMakeParser.IWriter
     {
         private readonly System.IO.StringWriter _writer = new System.IO.StringWriter();
 
@@ -106,7 +106,7 @@ namespace CMakeParser.Test
         internal void Eval(string result)
         {
             var writer = new Writer();
-            Lister.Program.MainFunc(_args.ToArray(), writer);
+            CMakeLister.Program.MainFunc(_args.ToArray(), writer);
 
             Delete(result);
             _lines = writer.Buffer.Replace(Combine("Source"), "${SourceDirec}").Replace(Combine("Binary"), "${BinaryDirec}").Replace("/", "\\");
@@ -143,7 +143,7 @@ namespace CMakeParser.Test
         internal void Eval(string result)
         {
             var writer = new Writer();
-            VisualStudio.Program.MainFunc(_args.ToArray(), writer);
+            CMakeToVisualStudio.Program.MainFunc(_args.ToArray(), writer);
 
             Delete(result);
             _lines = writer.Buffer.Replace(Combine("Source"), "${SourceDirec}").Replace(Combine("Binary"), "${BinaryDirec}").Replace("/", "\\");

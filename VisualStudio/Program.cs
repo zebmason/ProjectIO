@@ -4,13 +4,13 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace CMakeParser.VisualStudio
+namespace ProjectIO.CMakeToVisualStudio
 {
     using System.Collections.Generic;
 
     public class Program
     {
-        public static void MainFunc(string[] args, Common.IWriter writer)
+        public static void MainFunc(string[] args, CMakeParser.IWriter writer)
         {
             writer.WriteLine("CMakeParser command line application for creating a Visual Studio solution");
             writer.WriteLine("Copyright (c) 2020 Zebedee Mason");
@@ -67,12 +67,12 @@ namespace CMakeParser.VisualStudio
             if (args.Length > 3)
                 binaryDirec = System.IO.Path.GetDirectoryName(args[3]);
 
-            var state = new Core.State(sourceDirec, binaryDirec);
+            var state = new CMakeParser.State(sourceDirec, binaryDirec);
             state.ReadCache(args[3]);
 
-            var binaries = new Dictionary<string, Common.Binary>();
+            var binaries = new Dictionary<string, Core.Project>();
             var filters = new Dictionary<string, string>();
-            var builder = Common.Builder.Instance(state, binaries, filters, writer);
+            var builder = CMakeParser.Builder.Instance(state, binaries, filters, writer);
             builder.Read();
 
             var solutionName = "solution";
@@ -85,7 +85,7 @@ namespace CMakeParser.VisualStudio
 
         static void Main(string[] args)
         {
-            MainFunc(args, new Common.Writer());
+            MainFunc(args, new CMakeParser.Writer());
         }
     }
 }

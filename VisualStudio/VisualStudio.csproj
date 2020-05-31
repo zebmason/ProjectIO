@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{6BFA2CA1-9119-4104-A081-011E1D038A22}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>CMakeParser.VisualStudio</RootNamespace>
-    <AssemblyName>CMakeParser.VisualStudio</AssemblyName>
+    <RootNamespace>ProjectIO.CMakeToVisualStudio</RootNamespace>
+    <AssemblyName>ProjectIO.CMakeToVisualStudio</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
