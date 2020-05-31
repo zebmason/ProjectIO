@@ -80,7 +80,7 @@
       <Project>{543a7173-c259-4c56-865c-8e8e43d5d59d}</Project>
       <Name>Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VisualStudio\VisualStudio.csproj">
+    <ProjectReference Include="..\CMakeToVisualStudio\CMakeToVisualStudio.csproj">
       <Project>{6bfa2ca1-9119-4104-a081-011e1d038a22}</Project>
       <Name>VisualStudio</Name>
     </ProjectReference>

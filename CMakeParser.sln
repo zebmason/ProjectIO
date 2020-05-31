@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMakeLister", "CMakeLister\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{63477A77-77B1-4987-BFFF-EA8A5BC2FC75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualStudio", "VisualStudio\VisualStudio.csproj", "{6BFA2CA1-9119-4104-A081-011E1D038A22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMakeToVisualStudio", "CMakeToVisualStudio\CMakeToVisualStudio.csproj", "{6BFA2CA1-9119-4104-A081-011E1D038A22}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{543A7173-C259-4C56-865C-8E8E43D5D59D}"
 EndProject
