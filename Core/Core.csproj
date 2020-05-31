@@ -43,17 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Binary.cs" />
-    <Compile Include="Builder.cs" />
-    <Compile Include="IWriter.cs" />
+    <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="..\CMakeParser\Properties\SharedAssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CMakeParser\CMakeParser.csproj">
-      <Project>{6e9b242f-3935-4c65-a01e-1b5a5ab4cb3a}</Project>
-      <Name>CMakeParser</Name>
-    </ProjectReference>
+    <Compile Include="Properties\SharedAssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
