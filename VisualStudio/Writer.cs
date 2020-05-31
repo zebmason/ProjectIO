@@ -91,7 +91,7 @@ namespace ProjectIO.VisualStudio
             {
                 var compile = _templates["vcxproj.compile"];
                 compile = compile.Replace("{{path}}", filePath);
-                if (Core.Project.IsHeader(filePath))
+                if (Core.Cpp.IsHeader(filePath))
                     includes += compile.Replace("{{compile}}", "ClInclude");
                 else
                     compiles += compile.Replace("{{compile}}", "ClCompile");
@@ -139,7 +139,7 @@ namespace ProjectIO.VisualStudio
                 AddFilter(_filters[filePath], maps);
                 var compile = _templates["vcxproj.filters.compile"];
                 compile = compile.Replace("{{path}}", filePath).Replace("{{filter}}", _filters[filePath]);
-                if (Core.Project.IsHeader(filePath))
+                if (Core.Cpp.IsHeader(filePath))
                     includes += compile.Replace("{{compile}}", "ClInclude");
                 else
                     compiles += compile.Replace("{{compile}}", "ClCompile");

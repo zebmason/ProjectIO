@@ -7,7 +7,6 @@
 namespace ProjectIO.Core
 {
     using System.Collections.Generic;
-    using System.Linq;
 
     public class Project
     {
@@ -26,12 +25,6 @@ namespace ProjectIO.Core
         public Project(string language)
         {
             Language = language;
-        }
-
-        public static bool IsHeader(string fileName)
-        {
-            var exts = new string[] { ".h", ".hh", ".hpp", ".hxx", ".h++" };
-            return exts.Contains(System.IO.Path.GetExtension(fileName));
         }
     }
 }
