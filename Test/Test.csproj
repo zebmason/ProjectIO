@@ -76,9 +76,9 @@
       <Project>{8e6161fc-e356-43d1-93a3-55131e382c4b}</Project>
       <Name>CMakeLister</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common\Common.csproj">
+    <ProjectReference Include="..\Core\Core.csproj">
       <Project>{543a7173-c259-4c56-865c-8e8e43d5d59d}</Project>
-      <Name>Common</Name>
+      <Name>Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\VisualStudio\VisualStudio.csproj">
       <Project>{6bfa2ca1-9119-4104-a081-011e1d038a22}</Project>

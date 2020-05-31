@@ -56,9 +56,9 @@
       <Project>{6e9b242f-3935-4c65-a01e-1b5a5ab4cb3a}</Project>
       <Name>CMakeParser</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common\Common.csproj">
+    <ProjectReference Include="..\Core\Core.csproj">
       <Project>{543a7173-c259-4c56-865c-8e8e43d5d59d}</Project>
-      <Name>Common</Name>
+      <Name>Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
