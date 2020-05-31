@@ -35,7 +35,7 @@ namespace ProjectIO.CMakeToVisualStudio
                 }
                 else
                 {
-                    foreach (var fileName in Solution.Templates)
+                    foreach (var fileName in VisualStudio.Writer.Templates)
                     {
                         if (!System.IO.File.Exists(System.IO.Path.Combine(args[1], fileName)))
                         {
@@ -79,7 +79,7 @@ namespace ProjectIO.CMakeToVisualStudio
             if (state.Variables.ContainsKey("${CMAKE_PROJECT_NAME}"))
                 solutionName = state.Variables["${CMAKE_PROJECT_NAME}"];
 
-            var solution = new Solution(binaries, filters);
+            var solution = new VisualStudio.Writer(binaries, filters);
             solution.Write(solutionName, args[0], args[1]);
         }
 

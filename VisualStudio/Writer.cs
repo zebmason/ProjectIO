@@ -4,14 +4,13 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace ProjectIO.CMakeToVisualStudio
+namespace ProjectIO.VisualStudio
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using ProjectIO.Core;
 
-    public class Solution
+    public class Writer
     {
         public static string[] Templates { get; } = new string[] {
             "vcxproj", "vcxproj.compile", "vcxproj.reference", "vcxproj.console",
@@ -26,7 +25,7 @@ namespace ProjectIO.CMakeToVisualStudio
 
         private readonly Dictionary<string, string> _filters;
 
-        public Solution(Dictionary<string, Core.Project> binaries, Dictionary<string, string> filters)
+        public Writer(Dictionary<string, Core.Project> binaries, Dictionary<string, string> filters)
         {
             _binaries = binaries;
             _filters = filters;
