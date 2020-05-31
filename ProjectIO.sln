@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMakeToVisualStudio", "CMak
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{543A7173-C259-4C56-865C-8E8E43D5D59D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualStudio", "VisualStudio\VisualStudio.csproj", "{4A1C689C-78CF-4137-B85D-FD42F6B9961C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{543A7173-C259-4C56-865C-8E8E43D5D59D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{543A7173-C259-4C56-865C-8E8E43D5D59D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{543A7173-C259-4C56-865C-8E8E43D5D59D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A1C689C-78CF-4137-B85D-FD42F6B9961C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A1C689C-78CF-4137-B85D-FD42F6B9961C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A1C689C-78CF-4137-B85D-FD42F6B9961C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A1C689C-78CF-4137-B85D-FD42F6B9961C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
