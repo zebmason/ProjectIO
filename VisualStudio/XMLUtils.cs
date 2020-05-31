@@ -10,15 +10,15 @@ namespace ProjectIO.VisualStudio
 
     public class XMLUtils
     {
-        private readonly System.Xml.XmlDocument doc;
+        private readonly System.Xml.XmlDocument _doc;
 
-        internal System.Xml.XmlElement root;
+        internal System.Xml.XmlElement _root;
 
         internal XMLUtils(string filePath)
         {
-            doc = new System.Xml.XmlDocument();
-            doc.Load(filePath);
-            root = doc.DocumentElement;
+            _doc = new System.Xml.XmlDocument();
+            _doc.Load(filePath);
+            _root = _doc.DocumentElement;
         }
 
         internal void SelectNodes(System.Xml.XmlElement root, string name, List<System.Xml.XmlElement> list, bool descend = false)
@@ -46,7 +46,7 @@ namespace ProjectIO.VisualStudio
         {
             var list = new List<string>();
             var l1 = new List<System.Xml.XmlElement>();
-            SelectNodes(root, "ItemGroup", l1);
+            SelectNodes(_root, "ItemGroup", l1);
             foreach (var i1 in l1)
             {
                 var l2 = new List<System.Xml.XmlElement>();
@@ -65,7 +65,7 @@ namespace ProjectIO.VisualStudio
         {
             var dict = new Dictionary<string, string>();
             var l1 = new List<System.Xml.XmlElement>();
-            SelectNodes(root, "ItemGroup", l1);
+            SelectNodes(_root, "ItemGroup", l1);
             foreach (var i1 in l1)
             {
                 var l2 = new List<System.Xml.XmlElement>();

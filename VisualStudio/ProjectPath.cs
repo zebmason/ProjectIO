@@ -8,24 +8,24 @@ namespace ProjectIO.VisualStudio
 {
     public class ProjectPath
     {
-        private readonly string solutionDirectory;
+        private readonly string _solutionDirectory;
 
-        private readonly string projectDirectory;
+        private readonly string _projectDirectory;
 
         public string FilePath { get; }
 
         public ProjectPath(string filePath, string solutionDirectory)
         {
-            projectDirectory = System.IO.Path.GetDirectoryName(filePath);
+            _projectDirectory = System.IO.Path.GetDirectoryName(filePath);
             FilePath = filePath;
-            this.solutionDirectory = solutionDirectory;
+            _solutionDirectory = solutionDirectory;
         }
 
         public string Path(string link)
         {
             if (link.Length > 2 && link.Substring(0, 2) == "..")
             {
-                link = System.IO.Path.Combine(projectDirectory, link);
+                link = System.IO.Path.Combine(_projectDirectory, link);
                 link = System.IO.Path.GetFullPath(link);
             }
 
@@ -55,13 +55,13 @@ namespace ProjectIO.VisualStudio
 
         public string Combine(string filePath)
         {
-            filePath = filePath.Replace("$(ProjectDir)", projectDirectory + "\\");
-            if (solutionDirectory.Length > 0)
+            filePath = filePath.Replace("$(ProjectDir)", _projectDirectory + "\\");
+            if (_solutionDirectory.Length > 0)
             {
-                filePath = filePath.Replace("$(SolutionDir)", solutionDirectory + "\\");
+                filePath = filePath.Replace("$(SolutionDir)", _solutionDirectory + "\\");
             }
 
-            return Combine(projectDirectory, filePath);
+            return Combine(_projectDirectory, filePath);
         }
     }
 }

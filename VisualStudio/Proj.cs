@@ -14,18 +14,18 @@ namespace ProjectIO.VisualStudio
         {
             get
             {
-                return path.FilePath;
+                return _path.FilePath;
             }
         }
 
-        protected readonly ProjectPath path;
+        protected readonly ProjectPath _path;
 
-        protected XMLUtils xml;
+        protected XMLUtils _xml;
 
         public Proj(ProjectPath path)
         {
-            this.path = path;
-            xml = new XMLUtils(path.FilePath);
+            _path = path;
+            _xml = new XMLUtils(path.FilePath);
         }
 
         public abstract string Name { get; }
@@ -34,15 +34,15 @@ namespace ProjectIO.VisualStudio
         {
             var list = new List<string>();
             var l1 = new List<System.Xml.XmlElement>();
-            xml.SelectNodes(xml.root, "ItemGroup", l1);
+            _xml.SelectNodes(_xml._root, "ItemGroup", l1);
             foreach (var i1 in l1)
             {
                 var l2 = new List<System.Xml.XmlElement>();
-                xml.SelectNodes(i1, "ProjectReference", l2);
+                _xml.SelectNodes(i1, "ProjectReference", l2);
                 foreach (var i2 in l2)
                 {
                     var link = i2.GetAttribute("Include");
-                    link = path.Path(link);
+                    link = _path.Path(link);
                     list.Add(link);
                 }
             }

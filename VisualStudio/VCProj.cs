@@ -19,7 +19,7 @@ namespace ProjectIO.VisualStudio
         {
             get
             {
-                return System.IO.Path.GetFileNameWithoutExtension(path.FilePath);
+                return System.IO.Path.GetFileNameWithoutExtension(_path.FilePath);
             }
         }
 
@@ -48,7 +48,7 @@ namespace ProjectIO.VisualStudio
 
         private Dictionary<string, string> Filters(string name, string sourceDirec)
         {
-            var xml2 = new XMLUtils(path.FilePath + ".filters");
+            var xml2 = new XMLUtils(_path.FilePath + ".filters");
             var dict = xml2.Filters(name);
 
             var dict2 = new Dictionary<string, string>();
@@ -62,7 +62,7 @@ namespace ProjectIO.VisualStudio
                     filter = PathToFilter(filename, sourceDirec);
                 }
 
-                var fullName = path.Combine(filename);
+                var fullName = _path.Combine(filename);
                 dict2[fullName] = filter;
             }
 
@@ -74,14 +74,14 @@ namespace ProjectIO.VisualStudio
             if (filterFile)
                 return Filters(name, sourceDirec);
 
-            var list = xml.Compiles(name);
+            var list = _xml.Compiles(name);
 
             var dict2 = new Dictionary<string, string>();
             foreach (var filename in list)
             {
                 var filter = PathToFilter(filename, sourceDirec);
 
-                var fullName = path.Combine(filename);
+                var fullName = _path.Combine(filename);
                 dict2[fullName] = filter;
             }
 
@@ -91,12 +91,12 @@ namespace ProjectIO.VisualStudio
         public HashSet<string> Includes()
         {
             var includes = new HashSet<string>();
-            var direc = System.IO.Path.GetDirectoryName(path.FilePath);
+            var direc = System.IO.Path.GetDirectoryName(_path.FilePath);
 
             var nodes = new List<System.Xml.XmlElement>();
-            xml.SelectNodes(xml.root, "AdditionalIncludeDirectories", nodes);
-            xml.SelectNodes(xml.root, "NMakeIncludeSearchPath", nodes);
-            xml.SelectNodes(xml.root, "IncludePath", nodes);
+            _xml.SelectNodes(_xml._root, "AdditionalIncludeDirectories", nodes);
+            _xml.SelectNodes(_xml._root, "NMakeIncludeSearchPath", nodes);
+            _xml.SelectNodes(_xml._root, "IncludePath", nodes);
 
             foreach (var node in nodes)
             {
@@ -109,7 +109,7 @@ namespace ProjectIO.VisualStudio
                     }
 
                     var include = inc;
-                    include = path.Combine(include);
+                    include = _path.Combine(include);
                     includes.Add(include);
                 }
             }

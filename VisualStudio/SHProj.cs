@@ -15,7 +15,7 @@ namespace ProjectIO.VisualStudio
             get
             {
                 var l1 = new List<System.Xml.XmlElement>();
-                xml.SelectNodes(xml.root, "Import", l1);
+                _xml.SelectNodes(_xml._root, "Import", l1);
                 foreach (var i1 in l1)
                 {
                     if (!i1.HasAttribute("Label"))
@@ -25,7 +25,7 @@ namespace ProjectIO.VisualStudio
                         continue;
 
                     var link = i1.GetAttribute("Project");
-                    link = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path.FilePath), link);
+                    link = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(_path.FilePath), link);
 
                     return link;
                 }
@@ -43,7 +43,7 @@ namespace ProjectIO.VisualStudio
         {
             get
             {
-                return System.IO.Path.GetFileNameWithoutExtension(path.FilePath);
+                return System.IO.Path.GetFileNameWithoutExtension(_path.FilePath);
             }
         }
 
