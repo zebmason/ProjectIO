@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="Project.cs" company="Zebedee Mason">
+// <copyright file="Writer.cs" company="Zebedee Mason">
 //     Copyright (c) 2020 Zebedee Mason.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -17,9 +17,9 @@ namespace ProjectIO.VisualStudio
             "vcxproj.filters", "vcxproj.filters.compile", "vcxproj.filters.filter",
             "sln", "sln.project", "sln.global" };
 
-        private Dictionary<string, string> _templates = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _templates = new Dictionary<string, string>();
 
-        private Dictionary<string, string> _guids = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _guids = new Dictionary<string, string>();
 
         private readonly Dictionary<string, Core.Project> _binaries;
 

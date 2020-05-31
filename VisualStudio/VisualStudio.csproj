@@ -41,7 +41,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CSProj.cs" />
+    <Compile Include="NetProj.cs" />
+    <Compile Include="Proj.cs" />
+    <Compile Include="ProjectPath.cs" />
+    <Compile Include="SHProj.cs" />
+    <Compile Include="Solution.cs" />
+    <Compile Include="VBProj.cs" />
+    <Compile Include="VCProj.cs" />
     <Compile Include="Writer.cs" />
+    <Compile Include="XMLUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

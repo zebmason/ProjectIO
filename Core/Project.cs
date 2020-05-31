@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="Binary.cs" company="Zebedee Mason">
+// <copyright file="Project.cs" company="Zebedee Mason">
 //     Copyright (c) 2020 Zebedee Mason.
 // </copyright>
 //------------------------------------------------------------------------------
