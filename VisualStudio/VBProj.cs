@@ -20,11 +20,11 @@ namespace ProjectIO.VisualStudio
             var solutionPath = paths.Mapping["$(SolutionDir)"];
             var proj = new VBProj(new ProjectPath(filePath, solutionPath));
 
-            projects[proj.Name] = new Core.Project("VB");
+            projects[proj.Name] = new Core.VBasic();
             foreach (var dep in proj.Dependencies())
             {
                 var stub = System.IO.Path.GetFileNameWithoutExtension(dep);
-                projects[proj.Name].Libraries.Add(stub);
+                projects[proj.Name].Dependencies.Add(stub);
             }
 
             var files = new Dictionary<string, string>();

@@ -8,7 +8,6 @@ namespace ProjectIO.VisualStudio
 {
     using System.Collections.Generic;
     using System.Linq;
-    using ProjectIO.Core;
 
     public class Writer
     {
@@ -21,20 +20,20 @@ namespace ProjectIO.VisualStudio
 
         private readonly Dictionary<string, string> _guids = new Dictionary<string, string>();
 
-        private readonly Dictionary<string, Core.Project> _binaries;
+        private readonly Dictionary<string, Core.Project> _projects;
 
         private readonly Dictionary<string, string> _filters;
 
-        public Writer(Dictionary<string, Core.Project> binaries, Dictionary<string, string> filters)
+        public Writer(Dictionary<string, Core.Project> projects, Dictionary<string, string> filters)
         {
-            _binaries = binaries;
+            _projects = projects;
             _filters = filters;
         }
 
-        private static string Definitions(Core.Project binary)
+        private static string Definitions(Core.Cpp project)
         {
-            var definitions = binary.CompileDefinitions.Split().ToList();
-            if (binary.IsExe)
+            var definitions = project.CompileDefinitions.Split().ToList();
+            if (project.IsExe)
                 definitions.Add("_CONSOLE");
 
             if (definitions.Count == 0)
@@ -43,20 +42,20 @@ namespace ProjectIO.VisualStudio
             return string.Join(";", definitions) + ";";
         }
 
-        private static string IncludeDirectories(Core.Project binary)
+        private static string IncludeDirectories(Core.Cpp project)
         {
-            if (binary.IncludeDirectories.Count == 0)
+            if (project.IncludeDirectories.Count == 0)
                 return string.Empty;
 
-            return string.Join(";", binary.IncludeDirectories) + ";";
+            return string.Join(";", project.IncludeDirectories) + ";";
         }
 
-        private string References(Core.Project binary)
+        private string References(Core.Project project)
         {
             var references = string.Empty;
-            foreach (var library in binary.Libraries)
+            foreach (var library in project.Dependencies)
             {
-                if (!_binaries.ContainsKey(library))
+                if (!_projects.ContainsKey(library))
                     continue;
 
                 var reference = _templates["vcxproj.reference"];
@@ -67,27 +66,27 @@ namespace ProjectIO.VisualStudio
             return references;
         }
 
-        private string Console(Core.Project binary)
+        private string Console(Core.Project project)
         {
-            if (!binary.IsExe)
+            if (!project.IsExe)
                 return string.Empty;
 
             return _templates["vcxproj.console"];
         }
 
-        private string Libraries(Project binary)
+        private string Libraries(Core.Cpp project)
         {
-            if (binary.Libraries.Count == 0)
+            if (project.Dependencies.Count == 0)
                 return string.Empty;
 
-            return string.Join(".lib;", binary.Libraries) + ".lib;";
+            return string.Join(".lib;", project.Dependencies) + ".lib;";
         }
 
-        private void VCXProj(string name, Core.Project binary, string directory)
+        private void VCXProj(string name, Core.Cpp project, string directory)
         {
             var compiles = string.Empty;
             var includes = string.Empty;
-            foreach (var filePath in binary.FilePaths)
+            foreach (var filePath in project.FilePaths)
             {
                 var compile = _templates["vcxproj.compile"];
                 compile = compile.Replace("{{path}}", filePath);
@@ -101,14 +100,14 @@ namespace ProjectIO.VisualStudio
             var vcxproj = _templates["vcxproj"];
             vcxproj = vcxproj.Replace("{{compiles}}", compiles.TrimEnd());
             vcxproj = vcxproj.Replace("{{includes}}", includes.TrimEnd());
-            vcxproj = vcxproj.Replace("{{references}}", References(binary));
-            vcxproj = vcxproj.Replace("{{includedirecs}}", IncludeDirectories(binary));
-            vcxproj = vcxproj.Replace("{{definitions}}", Definitions(binary));
-            vcxproj = vcxproj.Replace("{{console}}", Console(binary));
+            vcxproj = vcxproj.Replace("{{references}}", References(project));
+            vcxproj = vcxproj.Replace("{{includedirecs}}", IncludeDirectories(project));
+            vcxproj = vcxproj.Replace("{{definitions}}", Definitions(project));
+            vcxproj = vcxproj.Replace("{{console}}", Console(project));
             vcxproj = vcxproj.Replace("{{guid}}", _guids[name]);
             vcxproj = vcxproj.Replace("{{name}}", name);
-            vcxproj = vcxproj.Replace("{{binary}}", binary.IsExe ? "Application" : "DynamicLibrary");
-            vcxproj = vcxproj.Replace("{{libraries}}", Libraries(binary));
+            vcxproj = vcxproj.Replace("{{binary}}", project.IsExe ? "Application" : "DynamicLibrary");
+            vcxproj = vcxproj.Replace("{{libraries}}", Libraries(project));
             file.Write(vcxproj);
             file.Close();
         }
@@ -126,12 +125,12 @@ namespace ProjectIO.VisualStudio
             maps.Add(filter);
         }
 
-        private void Filters(string name, Core.Project binary, string directory)
+        private void Filters(string name, Core.Cpp project, string directory)
         {
             var maps = new HashSet<string>();
             var compiles = string.Empty;
             var includes = string.Empty;
-            foreach (var filePath in binary.FilePaths)
+            foreach (var filePath in project.FilePaths)
             {
                 if (!_filters.ContainsKey(filePath))
                     continue;
@@ -184,7 +183,7 @@ namespace ProjectIO.VisualStudio
         {
             var sln_projects = string.Empty;
             var sln_globals = string.Empty;
-            foreach (var binary in _binaries)
+            foreach (var binary in _projects)
             {
                 var sln_project = _templates["sln.project"];
                 sln_project = sln_project.Replace("{{name}}", binary.Key).Replace("{{guid}}", _guids[binary.Key]);
@@ -205,18 +204,26 @@ namespace ProjectIO.VisualStudio
         public void Write(string solutionName, string outputDirectory, string templateDirectory)
         {
             LoadTemplates(templateDirectory);
-            foreach (var project in _binaries)
+            foreach (var project in _projects)
             {
-                _guids[project.Key] = System.Guid.NewGuid().ToString();
+                var name = project.Key;
+                _guids[name] = System.Guid.NewGuid().ToString();
             }
 
             SolutionFile(solutionName, outputDirectory);
-            foreach (var project in _binaries)
+            foreach (var project in _projects)
             {
-                var directory = System.IO.Path.Combine(outputDirectory, project.Key);
-                System.IO.Directory.CreateDirectory(directory);
-                VCXProj(project.Key, project.Value, directory);
-                Filters(project.Key, project.Value, directory);
+                var name = project.Key;
+
+                if (project.Value is Core.Cpp)
+                {
+                    var proj = project.Value as Core.Cpp;
+                    var directory = System.IO.Path.Combine(outputDirectory, name);
+                    System.IO.Directory.CreateDirectory(directory);
+                    VCXProj(name, proj, directory);
+                    Filters(name, proj, directory);
+                    continue;
+                }
             }
         }
     }

@@ -69,11 +69,11 @@ namespace ProjectIO.VisualStudio
             var solutionPath = paths.Mapping["$(SolutionDir)"];
             var proj = new SHProj(new ProjectPath(filePath, solutionPath));
 
-            projects[proj.Name] = new Core.Project("C#");
+            projects[proj.Name] = new Core.CSharp();
             foreach (var dep in proj.Dependencies())
             {
                 var stub = System.IO.Path.GetFileNameWithoutExtension(dep);
-                projects[proj.Name].Libraries.Add(stub);
+                projects[proj.Name].Dependencies.Add(stub);
             }
 
             var files = new Dictionary<string, string>();

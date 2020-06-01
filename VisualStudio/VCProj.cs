@@ -122,12 +122,13 @@ namespace ProjectIO.VisualStudio
             var sourceDirec = paths.Mapping["$(SolutionDir)"];
             var proj = new VCProj(new ProjectPath(filePath, sourceDirec));
 
-            projects[proj.Name] = new Core.Project("C++");
-            projects[proj.Name].IncludeDirectories.AddRange(proj.Includes());
+            var project = new Core.Cpp();
+            projects[proj.Name] = project;
+            project.IncludeDirectories.AddRange(proj.Includes());
             foreach (var dep in proj.Dependencies())
             {
                 var stub = System.IO.Path.GetFileNameWithoutExtension(dep);
-                projects[proj.Name].Libraries.Add(stub);
+                project.Dependencies.Add(stub);
             }
 
             foreach (var type in new string[] { "ClInclude", "ClCompile" })
@@ -138,7 +139,7 @@ namespace ProjectIO.VisualStudio
                     var filter = pair2.Value;
 
                     logger.Info("Appended {}", fullName);
-                    projects[proj.Name].FilePaths.Add(fullName);
+                    project.FilePaths.Add(fullName);
                     filters.Add(fullName, filter);
                 }
             }

@@ -9,8 +9,10 @@ namespace ProjectIO.Core
     using System.Collections.Generic;
     using System.Linq;
 
-    public static class VBasic
+    public class VBasic : Project
     {
+        public string CompileDefinitions { get; set; } = string.Empty;
+
         public static bool IsSource(string fileName)
         {
             var exts = new string[] { ".vb", ".vbs" };
@@ -26,7 +28,7 @@ namespace ProjectIO.Core
                 {
                     if (!projects.ContainsKey("<vb>"))
                     {
-                        projects["<vb>"] = new Project("VBasic");
+                        projects["<vb>"] = new VBasic();
                     }
 
                     projects["<vb>"].FilePaths.Add(filePath);

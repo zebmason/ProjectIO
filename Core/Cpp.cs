@@ -9,8 +9,12 @@ namespace ProjectIO.Core
     using System.Collections.Generic;
     using System.Linq;
 
-    public static class Cpp
+    public class Cpp : Project
     {
+        public string CompileDefinitions { get; set; } = string.Empty;
+
+        public List<string> IncludeDirectories { get; } = new List<string>();
+
         public static bool IsHeader(string fileName)
         {
             var exts = new string[] { ".h", ".hh", ".hpp", ".hxx", ".h++" };
@@ -32,7 +36,7 @@ namespace ProjectIO.Core
                 {
                     if (!projects.ContainsKey("<c++>"))
                     {
-                        projects["<c++>"] = new Project("C++");
+                        projects["<c++>"] = new Cpp();
                     }
 
                     projects["<c++>"].FilePaths.Add(filePath);

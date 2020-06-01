@@ -9,8 +9,10 @@ namespace ProjectIO.Core
     using System.Collections.Generic;
     using System.Linq;
 
-    public static class CSharp
+    public class CSharp : Project
     {
+        public string CompileDefinitions { get; set; } = string.Empty;
+
         public static bool IsSource(string fileName)
         {
             var exts = new string[] { ".cs", ".csx" };
@@ -26,7 +28,7 @@ namespace ProjectIO.Core
                 {
                     if (!projects.ContainsKey("<c#>"))
                     {
-                        projects["<c#>"] = new Project("C#");
+                        projects["<c#>"] = new CSharp();
                     }
 
                     projects["<c#>"].FilePaths.Add(filePath);

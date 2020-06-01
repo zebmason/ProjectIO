@@ -24,14 +24,15 @@ namespace ProjectIO.CMakeParser
 
             public void Add(string command, string name, State state, IEnumerable<string> filePaths)
             {
-                _binaries[name] = new Core.Project("C++")
+                var project = new Core.Cpp()
                 {
                     CompileDefinitions = state.Properties["COMPILE_DEFINITIONS"],
                     IsExe = command != "add_library"
                 };
 
-                _binaries[name].IncludeDirectories.AddRange(state.IncludeDirectories);
-                _binaries[name].FilePaths.AddRange(filePaths);
+                project.IncludeDirectories.AddRange(state.IncludeDirectories);
+                project.FilePaths.AddRange(filePaths);
+                _binaries[name] = project;
             }
         }
 
@@ -46,7 +47,7 @@ namespace ProjectIO.CMakeParser
 
             public void AddLibrariesToBinary(string name, IEnumerable<string> libraries)
             {
-                _binaries[name].Libraries.AddRange(libraries);
+                _binaries[name].Dependencies.AddRange(libraries);
             }
         }
 
@@ -61,7 +62,8 @@ namespace ProjectIO.CMakeParser
 
             public void AddCompileDefinitionsToBinary(string name, string definitions)
             {
-                _binaries[name].CompileDefinitions += " " + definitions;
+                var project = _binaries[name] as Core.Cpp;
+                project.CompileDefinitions += " " + definitions;
             }
         }
 
@@ -76,7 +78,8 @@ namespace ProjectIO.CMakeParser
 
             public void AddIncludeDirectoriesToBinary(string name, IEnumerable<string> directories)
             {
-                _binaries[name].IncludeDirectories.AddRange(directories);
+                var project = _binaries[name] as Core.Cpp;
+                project.IncludeDirectories.AddRange(directories);
             }
         }
 
