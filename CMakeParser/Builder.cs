@@ -10,16 +10,16 @@ namespace ProjectIO.CMakeParser
 
     public class Builder
     {
-        public class AddBinaryHandler : AddBinary.IHandler
+        internal class AddBinaryHandler : AddBinary.IHandler
         {
             private readonly Core.ILogger _logger;
 
-            private readonly Dictionary<string, Core.Project> _binaries;
+            private readonly Dictionary<string, Core.Project> _projects;
 
-            public AddBinaryHandler(Core.ILogger logger, Dictionary<string, Core.Project> binaries)
+            public AddBinaryHandler(Core.ILogger logger, Dictionary<string, Core.Project> projects)
             {
                 _logger = logger;
-                _binaries = binaries;
+                _projects = projects;
             }
 
             public void Add(string command, string name, State state, IEnumerable<string> filePaths)
@@ -32,58 +32,58 @@ namespace ProjectIO.CMakeParser
 
                 project.IncludeDirectories.AddRange(state.IncludeDirectories);
                 project.FilePaths.AddRange(filePaths);
-                _binaries[name] = project;
+                _projects[name] = project;
             }
         }
 
-        public class TargetLinkLibrariesHandler : TargetLinkLibraries.IHandler
+        internal class TargetLinkLibrariesHandler : TargetLinkLibraries.IHandler
         {
-            private readonly Dictionary<string, Core.Project> _binaries;
+            private readonly Dictionary<string, Core.Project> _projects;
 
-            public TargetLinkLibrariesHandler(Dictionary<string, Core.Project> binaries)
+            public TargetLinkLibrariesHandler(Dictionary<string, Core.Project> projects)
             {
-                _binaries = binaries;
+                _projects = projects;
             }
 
             public void AddLibrariesToBinary(string name, IEnumerable<string> libraries)
             {
-                _binaries[name].Dependencies.AddRange(libraries);
+                _projects[name].Dependencies.AddRange(libraries);
             }
         }
 
-        public class TargetCompileDefinitionsHandler : TargetCompileDefinitions.IHandler
+        internal class TargetCompileDefinitionsHandler : TargetCompileDefinitions.IHandler
         {
-            private readonly Dictionary<string, Core.Project> _binaries;
+            private readonly Dictionary<string, Core.Project> _projects;
 
-            public TargetCompileDefinitionsHandler(Dictionary<string, Core.Project> binaries)
+            public TargetCompileDefinitionsHandler(Dictionary<string, Core.Project> projects)
             {
-                _binaries = binaries;
+                _projects = projects;
             }
 
             public void AddCompileDefinitionsToBinary(string name, string definitions)
             {
-                var project = _binaries[name] as Core.Cpp;
+                var project = _projects[name] as Core.Cpp;
                 project.CompileDefinitions += " " + definitions;
             }
         }
 
-        public class TargetIncludeDirectoriesHandler : TargetIncludeDirectories.IHandler
+        internal class TargetIncludeDirectoriesHandler : TargetIncludeDirectories.IHandler
         {
-            private readonly Dictionary<string, Core.Project> _binaries;
+            private readonly Dictionary<string, Core.Project> _projects;
 
-            public TargetIncludeDirectoriesHandler(Dictionary<string, Core.Project> binaries)
+            public TargetIncludeDirectoriesHandler(Dictionary<string, Core.Project> projects)
             {
-                _binaries = binaries;
+                _projects = projects;
             }
 
             public void AddIncludeDirectoriesToBinary(string name, IEnumerable<string> directories)
             {
-                var project = _binaries[name] as Core.Cpp;
+                var project = _projects[name] as Core.Cpp;
                 project.IncludeDirectories.AddRange(directories);
             }
         }
 
-        public class SourceGroupHandler : SourceGroup.IHandler
+        internal class SourceGroupHandler : SourceGroup.IHandler
         {
             private readonly Dictionary<string, string> _filters;
 
@@ -98,25 +98,25 @@ namespace ProjectIO.CMakeParser
             }
         }
 
-        public static CMakeLists Instance(State state, Dictionary<string, Core.Project> binaries, Dictionary<string, string> filters, Core.ILogger logger)
+        internal static CMakeLists Instance(State state, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters, Core.ILogger logger)
         {
             var log = new Logger(logger);
             var lists = new CMakeLists(state, log);
 
-            var addBinary = new AddBinary(new AddBinaryHandler(logger, binaries));
+            var addBinary = new AddBinary(new AddBinaryHandler(logger, projects));
             var binaryCommands = new string[] { "add_executable", "add_library", "catkin_add_gtest" };
             foreach (var command in binaryCommands)
             {
                 lists.AddCommand(command, addBinary);
             }
 
-            var targetLinkLibraries = new TargetLinkLibraries(new TargetLinkLibrariesHandler(binaries));
+            var targetLinkLibraries = new TargetLinkLibraries(new TargetLinkLibrariesHandler(projects));
             lists.AddCommand("target_link_libraries", targetLinkLibraries);
 
-            var targetCompileDefinitions = new TargetCompileDefinitions(new TargetCompileDefinitionsHandler(binaries));
+            var targetCompileDefinitions = new TargetCompileDefinitions(new TargetCompileDefinitionsHandler(projects));
             lists.AddCommand("target_compile_definitions", targetCompileDefinitions);
 
-            var targetIncludeDirectories = new TargetIncludeDirectories(new TargetIncludeDirectoriesHandler(binaries));
+            var targetIncludeDirectories = new TargetIncludeDirectories(new TargetIncludeDirectoriesHandler(projects));
             lists.AddCommand("target_include_directories", targetIncludeDirectories);
 
             var ignore = new Ignore();
@@ -139,6 +139,46 @@ namespace ProjectIO.CMakeParser
             lists.AddCommand("add_compile_definitions", new AddCompileDefinitions());
 
             return lists;
+        }
+
+        public static string Extract(Core.ILogger logger, Core.Paths paths, List<string> filePaths, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters)
+        {
+            string lists = string.Empty;
+            string cache = string.Empty;
+            foreach (var filePath in filePaths)
+            {
+                if (lists.Length == 0 && System.IO.Path.GetFileName(filePath) == "CMakeLists.txt")
+                    lists = filePath;
+
+                if (cache.Length == 0 && System.IO.Path.GetFileName(filePath) == "CMakeCache.txt")
+                    cache = filePath;
+            }
+
+            if (lists.Length == 0)
+                return "solution";
+
+            var sourceDirec = System.IO.Path.GetDirectoryName(lists);
+            paths.Add("PROJECT_SOURCE_DIR", sourceDirec);
+            filePaths.Remove(lists);
+
+            var binaryDirec = string.Empty;
+            if (cache.Length != 0)
+            {
+                binaryDirec = System.IO.Path.GetDirectoryName(cache);
+                paths.Add("PROJECT_BINARY_DIR", binaryDirec);
+                filePaths.Remove(cache);
+            }
+
+            var state = new State(sourceDirec, binaryDirec);
+            state.ReadCache(cache);
+
+            var builder = Instance(state, projects, filters, logger);
+            builder.Read();
+
+            if (state.Variables.ContainsKey("${CMAKE_PROJECT_NAME}"))
+                return state.Variables["${CMAKE_PROJECT_NAME}"];
+
+            return "solution";
         }
     }
 }

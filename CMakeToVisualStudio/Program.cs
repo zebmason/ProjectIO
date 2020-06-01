@@ -58,28 +58,20 @@ namespace ProjectIO.CMakeToVisualStudio
             {
                 logger.Info("Create a Visual Studio solution");
                 logger.Info("Usage:");
-                logger.Info("  CMakeParser.VisualStudio.exe <output directory> <template directory> <CMakeLists.txt> [CMakeCache.txt]");
+                logger.Info("  ProjectIO.CMakeToVisualStudio.exe <output directory> <template directory> <CMakeLists.txt> [CMakeCache.txt]");
                 return;
             }
 
-            var sourceDirec = System.IO.Path.GetDirectoryName(args[2]);
-            var binaryDirec = string.Empty;
+            var filePaths = new List<string> { args[2] };
             if (args.Length > 3)
-                binaryDirec = System.IO.Path.GetDirectoryName(args[3]);
+                filePaths.Add(args[3]);
 
-            var state = new CMakeParser.State(sourceDirec, binaryDirec);
-            state.ReadCache(args[3]);
-
-            var binaries = new Dictionary<string, Core.Project>();
+            var projects = new Dictionary<string, Core.Project>();
             var filters = new Dictionary<string, string>();
-            var builder = CMakeParser.Builder.Instance(state, binaries, filters, logger);
-            builder.Read();
+            var paths = new Core.Paths();
+            var solutionName = CMakeParser.Builder.Extract(logger, paths, filePaths, projects, filters);
 
-            var solutionName = "solution";
-            if (state.Variables.ContainsKey("${CMAKE_PROJECT_NAME}"))
-                solutionName = state.Variables["${CMAKE_PROJECT_NAME}"];
-
-            var solution = new VisualStudio.Writer(binaries, filters);
+            var solution = new VisualStudio.Writer(projects, filters);
             solution.Write(solutionName, args[0], args[1]);
         }
 
