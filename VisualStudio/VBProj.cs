@@ -27,13 +27,7 @@ namespace ProjectIO.VisualStudio
                 projects[proj.Name].Dependencies.Add(stub);
             }
 
-            var files = new Dictionary<string, string>();
-            proj.Compiles(files, logger, paths);
-            foreach (var fullName in files.Keys)
-            {
-                logger.Info("Appended {}", fullName);
-                projects[proj.Name].FilePaths.Add(fullName);
-            }
+            proj.Compiles(projects[proj.Name].FilePaths, logger, paths);
         }
     }
 }

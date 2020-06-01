@@ -58,7 +58,7 @@ namespace ProjectIO.VisualStudio
             return list;
         }
 
-        public override void Compiles(Dictionary<string, string> files, Core.ILogger logger, Core.Paths filePath)
+        public override void Compiles(List<string> files, Core.ILogger logger, Core.Paths filePath)
         {
             var xml2 = new XMLUtils(FilePath);
             xml2.DotNetCompiles(this, files, logger, filePath);
@@ -76,13 +76,7 @@ namespace ProjectIO.VisualStudio
                 projects[proj.Name].Dependencies.Add(stub);
             }
 
-            var files = new Dictionary<string, string>();
-            proj.Compiles(files, logger, paths);
-            foreach (var fullName in files.Keys)
-            {
-                logger.Info("Appended {}", fullName);
-                projects[proj.Name].FilePaths.Add(fullName);
-            }
+            proj.Compiles(projects[proj.Name].FilePaths, logger, paths);
         }
     }
 }

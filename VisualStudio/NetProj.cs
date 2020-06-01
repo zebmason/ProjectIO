@@ -61,7 +61,7 @@ namespace ProjectIO.VisualStudio
             return list;
         }
 
-        public virtual void Compiles(Dictionary<string, string> files, Core.ILogger logger, Core.Paths filePath)
+        public virtual void Compiles(List<string> files, Core.ILogger logger, Core.Paths filePath)
         {
             _xml.DotNetCompiles(this, files, logger, filePath);
         }

@@ -87,7 +87,7 @@ namespace ProjectIO.VisualStudio
             return dict;
         }
 
-        public void DotNetCompiles(VisualStudio.Proj project, Dictionary<string, string> files, Core.ILogger logger, Core.Paths filePath)
+        public void DotNetCompiles(Proj project, List<string> files, Core.ILogger logger, Core.Paths filePath)
         {
             var list = Compiles("Compile");
             var direc = System.IO.Path.GetDirectoryName(project.FilePath);
@@ -112,8 +112,7 @@ namespace ProjectIO.VisualStudio
                         foreach (var name in System.IO.Directory.GetFiles(directory, pattern))
                         {
                             logger.Info("Appended {}", name);
-
-                            files[name] = project.FilePath;
+                            files.Add(name);
                         }
                     }
                     catch
@@ -129,7 +128,7 @@ namespace ProjectIO.VisualStudio
                     }
 
                     logger.Info("Appended {}", file);
-                    files[file] = project.FilePath;
+                    files.Add(file);
                 }
             }
 
