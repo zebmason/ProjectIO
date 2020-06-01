@@ -6,7 +6,7 @@
 
 namespace ProjectIO.VisualStudio
 {
-    public class ProjectPath
+    internal class ProjectPath
     {
         private readonly string _solutionDirectory;
 

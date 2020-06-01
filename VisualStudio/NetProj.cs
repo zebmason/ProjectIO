@@ -8,7 +8,7 @@ namespace ProjectIO.VisualStudio
 {
     using System.Collections.Generic;
 
-    public abstract class NetProj : Proj
+    internal abstract class NetProj : Proj
     {
         public NetProj(ProjectPath path)
             : base(path)

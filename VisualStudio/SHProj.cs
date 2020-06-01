@@ -8,7 +8,7 @@ namespace ProjectIO.VisualStudio
 {
     using System.Collections.Generic;
 
-    public class SHProj : NetProj
+    internal class SHProj : NetProj
     {
         public override string FilePath
         {
@@ -62,6 +62,27 @@ namespace ProjectIO.VisualStudio
         {
             var xml2 = new XMLUtils(FilePath);
             xml2.DotNetCompiles(this, files, logger, filePath);
+        }
+
+        public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects)
+        {
+            var solutionPath = paths.Mapping["$(SolutionDir)"];
+            var proj = new SHProj(new ProjectPath(filePath, solutionPath));
+
+            projects[proj.Name] = new Core.Project("C#");
+            foreach (var dep in proj.Dependencies())
+            {
+                var stub = System.IO.Path.GetFileNameWithoutExtension(dep);
+                projects[proj.Name].Libraries.Add(stub);
+            }
+
+            var files = new Dictionary<string, string>();
+            proj.Compiles(files, logger, paths);
+            foreach (var fullName in files.Keys)
+            {
+                logger.Info("Appended {}", fullName);
+                projects[proj.Name].FilePaths.Add(fullName);
+            }
         }
     }
 }

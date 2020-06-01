@@ -8,7 +8,7 @@ namespace ProjectIO.VisualStudio
 {
     using System.Collections.Generic;
 
-    public abstract class Proj
+    internal abstract class Proj
     {
         public virtual string FilePath
         {
@@ -51,5 +51,15 @@ namespace ProjectIO.VisualStudio
         }
 
         public abstract List<string> Externals();
+
+        public void SetProjectPath(Core.Paths paths)
+        {
+            paths.Add("$(ProjectDir)", System.IO.Path.GetDirectoryName(_path.FilePath));
+        }
+
+        public void UnsetProjectPath(Core.Paths paths)
+        {
+            paths.Remove("$(ProjectDir)");
+        }
     }
 }

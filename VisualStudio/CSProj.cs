@@ -8,7 +8,7 @@ namespace ProjectIO.VisualStudio
 {
     using System.Collections.Generic;
 
-    public class CSProj : NetProj
+    internal class CSProj : NetProj
     {
         public CSProj(ProjectPath path)
             : base(path)
@@ -34,6 +34,28 @@ namespace ProjectIO.VisualStudio
             }
 
             return list;
+        }
+
+        public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects)
+        {
+            var solutionPath = paths.Mapping["$(SolutionDir)"];
+            var proj = new CSProj(new ProjectPath(filePath, solutionPath));
+
+
+            projects[proj.Name] = new Core.Project("C#");
+            foreach (var dep in proj.Dependencies())
+            {
+                var stub = System.IO.Path.GetFileNameWithoutExtension(dep);
+                projects[proj.Name].Libraries.Add(stub);
+            }
+
+            var files = new Dictionary<string, string>();
+            proj.Compiles(files, logger, paths);
+            foreach (var fullName in files.Keys)
+            {
+                logger.Info("Appended {}", fullName);
+                projects[proj.Name].FilePaths.Add(fullName);
+            }
         }
     }
 }

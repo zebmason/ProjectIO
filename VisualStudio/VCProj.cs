@@ -8,7 +8,7 @@ namespace ProjectIO.VisualStudio
 {
     using System.Collections.Generic;
 
-    public class VCProj : Proj
+    internal class VCProj : Proj
     {
         public VCProj(ProjectPath path)
             : base(path)
@@ -117,8 +117,9 @@ namespace ProjectIO.VisualStudio
             return includes;
         }
 
-        public static void Extract(Core.ILogger logger, string filePath, string sourceDirec, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters)
+        public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters)
         {
+            var sourceDirec = paths.Mapping["$(SolutionDir)"];
             var proj = new VCProj(new ProjectPath(filePath, sourceDirec));
 
             projects[proj.Name] = new Core.Project("C++");

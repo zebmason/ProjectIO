@@ -61,18 +61,18 @@ namespace ProjectIO.VisualStudio
                 }
 
                 fileNames.Add(new KeyValuePair<string, string>(fileName, direc));
-                Solution.SetSolutionDir(paths, fileName, direc);
+                SetSolutionDir(paths, fileName, direc);
             }
             else if (ext == ".sln")
             {
                 logger.Info("Reading projects from {}", fileName);
                 direc = System.IO.Path.GetDirectoryName(fileName);
-                foreach (var name in VisualStudio.Solution.ReadVisualStudioSolution(fileName))
+                foreach (var name in ReadVisualStudioSolution(fileName))
                 {
-                    Solution.Files(logger, paths, name, direc, fileNames, extensions, projectExts);
+                    Files(logger, paths, name, direc, fileNames, extensions, projectExts);
                 }
 
-                Solution.SetSolutionDir(paths, fileName, direc);
+                SetSolutionDir(paths, fileName, direc);
             }
         }
 
@@ -84,10 +84,79 @@ namespace ProjectIO.VisualStudio
             var projectExtensions = new List<string>(projectExts);
             foreach (var fileName in lines)
             {
-                Solution.Files(logger, paths, fileName, string.Empty, fileNames, extensions, projectExtensions);
+                Files(logger, paths, fileName, string.Empty, fileNames, extensions, projectExtensions);
             }
 
             return fileNames;
+        }
+
+        private static void ExtractProjects(Core.ILogger logger, Core.Paths paths, List<string> filePaths, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters)
+        {
+            var skipped = new List<string>();
+            foreach (var filePath in filePaths)
+            {
+                var ext = System.IO.Path.GetExtension(filePath);
+
+                if (ext == ".vcxproj")
+                {
+                    logger.Info("Reading Visual C++");
+                    VCProj.Extract(logger, paths, filePath, projects, filters);
+                    continue;
+                }
+
+                if (ext == ".csproj")
+                {
+                    CSProj.Extract(logger, paths, filePath,  projects);
+                    continue;
+                }
+
+                if (ext == ".shproj")
+                {
+                    SHProj.Extract(logger, paths, filePath, projects);
+                    continue;
+                }
+
+                if (ext == ".vbproj")
+                {
+                    VBProj.Extract(logger, paths, filePath, projects);
+                    continue;
+                }
+
+                skipped.Add(filePath);
+            }
+
+            filePaths.Clear();
+            filePaths.AddRange(skipped);
+        }
+
+        private static void Extract(Core.ILogger logger, Core.Paths paths, string solutionPath, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters)
+        {
+            logger.Info("Reading projects from {}", solutionPath);
+            var direc = System.IO.Path.GetDirectoryName(solutionPath);
+            SetSolutionDir(paths, solutionPath, direc);
+            var filePaths = ReadVisualStudioSolution(solutionPath);
+            ExtractProjects(logger, paths, filePaths, projects, filters);
+        }
+
+        public static void Extract(Core.ILogger logger, Core.Paths paths, List<string> filePaths, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters)
+        {
+            ExtractProjects(logger, paths, filePaths, projects, filters);
+
+            var skipped = new List<string>();
+            foreach (var filePath in filePaths)
+            {
+                var ext = System.IO.Path.GetExtension(filePath);
+                if (ext == ".sln")
+                {
+                    Extract(logger, paths, filePath, projects, filters);
+                    continue;
+                }
+
+                skipped.Add(filePath);
+            }
+
+            filePaths.Clear();
+            filePaths.AddRange(skipped);
         }
     }
 }
