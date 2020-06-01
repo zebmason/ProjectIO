@@ -157,6 +157,8 @@ namespace ProjectIO.VisualStudio
 
             filePaths.Clear();
             filePaths.AddRange(skipped);
+
+            Proj.UnsetProjectPath(paths);
         }
     }
 }

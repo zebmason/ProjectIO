@@ -10,15 +10,15 @@ namespace ProjectIO.VisualStudio
 
     internal class VBProj : NetProj
     {
-        public VBProj(ProjectPath path)
-            : base(path)
+        public VBProj(string path, Core.Paths paths)
+            : base(path, paths)
         {
         }
 
         public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects)
         {
             var solutionPath = paths.Mapping["$(SolutionDir)"];
-            var proj = new VBProj(new ProjectPath(filePath, solutionPath));
+            var proj = new VBProj(filePath, paths);
 
             projects[proj.Name] = new Core.VBasic();
             foreach (var dep in proj.Dependencies())

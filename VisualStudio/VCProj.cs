@@ -10,8 +10,8 @@ namespace ProjectIO.VisualStudio
 
     internal class VCProj : Proj
     {
-        public VCProj(ProjectPath path)
-            : base(path)
+        public VCProj(string path, Core.Paths paths)
+            : base(path, paths)
         {
         }
 
@@ -19,7 +19,7 @@ namespace ProjectIO.VisualStudio
         {
             get
             {
-                return System.IO.Path.GetFileNameWithoutExtension(_path.FilePath);
+                return System.IO.Path.GetFileNameWithoutExtension(_filePath);
             }
         }
 
@@ -48,7 +48,7 @@ namespace ProjectIO.VisualStudio
 
         private Dictionary<string, string> Filters(string name, string sourceDirec)
         {
-            var xml2 = new XMLUtils(_path.FilePath + ".filters");
+            var xml2 = new XMLUtils(_filePath + ".filters");
             var dict = xml2.Filters(name);
 
             var dict2 = new Dictionary<string, string>();
@@ -62,7 +62,7 @@ namespace ProjectIO.VisualStudio
                     filter = PathToFilter(filename, sourceDirec);
                 }
 
-                var fullName = _path.Combine(filename);
+                var fullName = _paths.RemoveAliases(filename);
                 dict2[fullName] = filter;
             }
 
@@ -81,7 +81,7 @@ namespace ProjectIO.VisualStudio
             {
                 var filter = PathToFilter(filename, sourceDirec);
 
-                var fullName = _path.Combine(filename);
+                var fullName = _paths.RemoveAliases(filename);
                 dict2[fullName] = filter;
             }
 
@@ -91,7 +91,7 @@ namespace ProjectIO.VisualStudio
         public HashSet<string> Includes()
         {
             var includes = new HashSet<string>();
-            var direc = System.IO.Path.GetDirectoryName(_path.FilePath);
+            var direc = System.IO.Path.GetDirectoryName(_filePath);
 
             var nodes = new List<System.Xml.XmlElement>();
             _xml.SelectNodes(_xml._root, "AdditionalIncludeDirectories", nodes);
@@ -109,7 +109,7 @@ namespace ProjectIO.VisualStudio
                     }
 
                     var include = inc;
-                    include = _path.Combine(include);
+                    include = _paths.RemoveAliases(include);
                     includes.Add(include);
                 }
             }
@@ -120,7 +120,7 @@ namespace ProjectIO.VisualStudio
         public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters)
         {
             var sourceDirec = paths.Mapping["$(SolutionDir)"];
-            var proj = new VCProj(new ProjectPath(filePath, sourceDirec));
+            var proj = new VCProj(filePath, paths);
 
             var project = new Core.Cpp();
             projects[proj.Name] = project;

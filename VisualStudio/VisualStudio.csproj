@@ -44,7 +44,6 @@
     <Compile Include="CSProj.cs" />
     <Compile Include="NetProj.cs" />
     <Compile Include="Proj.cs" />
-    <Compile Include="ProjectPath.cs" />
     <Compile Include="SHProj.cs" />
     <Compile Include="Solution.cs" />
     <Compile Include="VBProj.cs" />

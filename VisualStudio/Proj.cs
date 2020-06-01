@@ -10,22 +10,25 @@ namespace ProjectIO.VisualStudio
 
     internal abstract class Proj
     {
+        protected string _filePath;
+
+        protected Core.Paths _paths;
+
         public virtual string FilePath
         {
             get
             {
-                return _path.FilePath;
+                return _filePath;
             }
         }
 
-        protected readonly ProjectPath _path;
-
         protected XMLUtils _xml;
 
-        public Proj(ProjectPath path)
+        public Proj(string path, Core.Paths paths)
         {
-            _path = path;
-            _xml = new XMLUtils(path.FilePath);
+            _filePath = path;
+            _paths = paths;
+            _xml = new XMLUtils(path);
         }
 
         public abstract string Name { get; }
@@ -42,7 +45,7 @@ namespace ProjectIO.VisualStudio
                 foreach (var i2 in l2)
                 {
                     var link = i2.GetAttribute("Include");
-                    link = _path.Path(link);
+                    link = _paths.RemoveAliases(link);
                     list.Add(link);
                 }
             }
@@ -52,12 +55,12 @@ namespace ProjectIO.VisualStudio
 
         public abstract List<string> Externals();
 
-        public void SetProjectPath(Core.Paths paths)
+        public void SetProjectPath()
         {
-            paths.Add("$(ProjectDir)", System.IO.Path.GetDirectoryName(_path.FilePath));
+            _paths.Add("$(ProjectDir)", System.IO.Path.GetDirectoryName(_filePath));
         }
 
-        public void UnsetProjectPath(Core.Paths paths)
+        public static void UnsetProjectPath(Core.Paths paths)
         {
             paths.Remove("$(ProjectDir)");
         }

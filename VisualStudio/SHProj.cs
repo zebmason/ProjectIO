@@ -25,7 +25,7 @@ namespace ProjectIO.VisualStudio
                         continue;
 
                     var link = i1.GetAttribute("Project");
-                    link = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(_path.FilePath), link);
+                    link = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(_filePath), link);
 
                     return link;
                 }
@@ -34,8 +34,8 @@ namespace ProjectIO.VisualStudio
             }
         }
 
-        public SHProj(ProjectPath path)
-            : base(path)
+        public SHProj(string path, Core.Paths paths)
+            : base(path, paths)
         {
         }
 
@@ -43,7 +43,7 @@ namespace ProjectIO.VisualStudio
         {
             get
             {
-                return System.IO.Path.GetFileNameWithoutExtension(_path.FilePath);
+                return System.IO.Path.GetFileNameWithoutExtension(_filePath);
             }
         }
 
@@ -67,7 +67,7 @@ namespace ProjectIO.VisualStudio
         public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects)
         {
             var solutionPath = paths.Mapping["$(SolutionDir)"];
-            var proj = new SHProj(new ProjectPath(filePath, solutionPath));
+            var proj = new SHProj(filePath, paths);
 
             projects[proj.Name] = new Core.CSharp();
             foreach (var dep in proj.Dependencies())

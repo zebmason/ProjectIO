@@ -27,6 +27,21 @@ namespace ProjectIO.Core
             return Mapping.ContainsKey(WrapAlias(alias));
         }
 
+        public string Value(string alias)
+        {
+            return Mapping[WrapAlias(alias)];
+        }
+
+        public string InsertAliases(string filePath)
+        {
+            foreach (var path in Mapping)
+            {
+                filePath = filePath.Replace(path.Value, path.Key);
+            }
+
+            return filePath;
+        }
+
         private string RemovePass(string filePath)
         {
             foreach (var path in Mapping)
@@ -49,7 +64,7 @@ namespace ProjectIO.Core
                 return;
             }
 
-            var raw = Paths.UnwrapKey(key);
+            var raw = UnwrapKey(key);
             var val = System.Environment.GetEnvironmentVariable(raw);
             Add(raw, val == null ? string.Empty : val);
         }
@@ -93,7 +108,7 @@ namespace ProjectIO.Core
             return path;
         }
 
-        public void Add(string alias, string path, string dgmlDirec = "")
+        public void Add(string alias, string path, string localDirec = "")
         {
             var length = path.Length;
             if (length == 0)
@@ -101,9 +116,9 @@ namespace ProjectIO.Core
                 return;
             }
 
-            if (path[0] =='.')
+            if (path[0] == '.')
             {
-                path = System.IO.Path.Combine(dgmlDirec, path);
+                path = System.IO.Path.Combine(localDirec, path);
                 path = System.IO.Path.GetFullPath(path);
             }
 
@@ -112,12 +127,12 @@ namespace ProjectIO.Core
                 path += System.IO.Path.DirectorySeparatorChar;
             }
 
-            Mapping[Paths.WrapAlias(alias)] = path;
+            Mapping[WrapAlias(alias)] = path;
         }
 
         public void Remove(string alias)
         {
-            var wrapped = Paths.WrapAlias(alias);
+            var wrapped = WrapAlias(alias);
             if (Mapping.ContainsKey(wrapped))
             {
                 Mapping.Remove(wrapped);

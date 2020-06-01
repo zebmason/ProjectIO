@@ -10,8 +10,8 @@ namespace ProjectIO.VisualStudio
 
     internal class CSProj : NetProj
     {
-        public CSProj(ProjectPath path)
-            : base(path)
+        public CSProj(string path, Core.Paths paths)
+            : base(path, paths)
         {
         }
 
@@ -29,7 +29,7 @@ namespace ProjectIO.VisualStudio
                     continue;
 
                 var link = i1.GetAttribute("Project");
-                link = _path.Path(link);
+                link = _paths.RemoveAliases(link);
                 list.Add(link);
             }
 
@@ -39,7 +39,7 @@ namespace ProjectIO.VisualStudio
         public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects)
         {
             var solutionPath = paths.Mapping["$(SolutionDir)"];
-            var proj = new CSProj(new ProjectPath(filePath, solutionPath));
+            var proj = new CSProj(filePath, paths);
 
 
             projects[proj.Name] = new Core.CSharp();

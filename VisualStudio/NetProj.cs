@@ -10,8 +10,8 @@ namespace ProjectIO.VisualStudio
 
     internal abstract class NetProj : Proj
     {
-        public NetProj(ProjectPath path)
-            : base(path)
+        public NetProj(string path, Core.Paths paths)
+            : base(path, paths)
         {
         }
 
