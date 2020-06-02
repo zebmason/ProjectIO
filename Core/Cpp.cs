@@ -40,7 +40,7 @@ namespace ProjectIO.Core
                     }
 
                     projects["<c++>"].FilePaths.Add(filePath);
-                    logger.Info("Appended for reading {}", filePath);
+                    logger.Info("Appended for reading {0}", filePath);
                     continue;
                 }
 

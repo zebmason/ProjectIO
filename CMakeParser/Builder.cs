@@ -157,7 +157,7 @@ namespace ProjectIO.CMakeParser
             if (lists.Length == 0)
                 return "solution";
 
-            logger.Info("Appended for reading {}", lists);
+            logger.Info("Appended for reading {0}", lists);
 
             var sourceDirec = System.IO.Path.GetDirectoryName(lists);
             paths.Add("PROJECT_SOURCE_DIR", sourceDirec);

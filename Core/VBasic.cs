@@ -32,7 +32,7 @@ namespace ProjectIO.Core
                     }
 
                     projects["<vb>"].FilePaths.Add(filePath);
-                    logger.Info("Appended for reading {}", filePath);
+                    logger.Info("Appended for reading {0}", filePath);
                     continue;
                 }
 

@@ -33,7 +33,7 @@ namespace ProjectIO.VisualStudio
                 if (ext == ".csproj" || ext == ".shproj" || ext == ".vbproj" || ext == ".vcxproj")
                 {
                     projects.Add(System.IO.Path.Combine(direc, filename));
-                    logger.Info("Appended for reading {}", filename);
+                    logger.Info("Appended for reading {0}", filename);
                 }
             }
 
@@ -55,7 +55,7 @@ namespace ProjectIO.VisualStudio
             var ext = System.IO.Path.GetExtension(fileName);
             if (projectExts.Contains(ext))
             {
-                logger.Info("Appended for reading {}", fileName);
+                logger.Info("Appended for reading {0}", fileName);
                 if (!extensions.Contains(ext))
                 {
                     extensions.Add(ext);
@@ -66,7 +66,7 @@ namespace ProjectIO.VisualStudio
             }
             else if (ext == ".sln")
             {
-                logger.Info("Reading projects from {}", fileName);
+                logger.Info("Reading projects from {0}", fileName);
                 direc = System.IO.Path.GetDirectoryName(fileName);
                 foreach (var name in ReadVisualStudioSolution(logger, fileName))
                 {
@@ -86,7 +86,7 @@ namespace ProjectIO.VisualStudio
 
                 if (ext == ".vcxproj")
                 {
-                    logger.Info("Appended for reading {}", filePath);
+                    logger.Info("Appended for reading {0}", filePath);
                     logger.Info("Reading Visual C++");
                     VCProj.Extract(logger, paths, filePath, projects, filters);
                     continue;
@@ -119,7 +119,7 @@ namespace ProjectIO.VisualStudio
 
         private static void Extract(Core.ILogger logger, Core.Paths paths, string solutionPath, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters)
         {
-            logger.Info("Reading projects from {}", solutionPath);
+            logger.Info("Reading projects from {0}", solutionPath);
             var direc = System.IO.Path.GetDirectoryName(solutionPath);
             SetSolutionDir(paths, solutionPath, direc);
             var filePaths = ReadVisualStudioSolution(logger, solutionPath);

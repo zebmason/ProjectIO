@@ -111,7 +111,7 @@ namespace ProjectIO.VisualStudio
                     {
                         foreach (var name in System.IO.Directory.GetFiles(directory, pattern))
                         {
-                            logger.Info("Appended {}", name);
+                            logger.Info("Appended {0}", name);
                             files.Add(name);
                         }
                     }
@@ -123,11 +123,11 @@ namespace ProjectIO.VisualStudio
                 {
                     if (!System.IO.File.Exists(file))
                     {
-                        logger.Warn("Cannot find {}", file);
+                        logger.Warn("Cannot find {0}", file);
                         continue;
                     }
 
-                    logger.Info("Appended {}", file);
+                    logger.Info("Appended {0}", file);
                     files.Add(file);
                 }
             }
