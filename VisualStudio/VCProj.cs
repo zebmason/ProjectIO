@@ -138,7 +138,7 @@ namespace ProjectIO.VisualStudio
                     var fullName = pair2.Key;
                     var filter = pair2.Value;
 
-                    logger.Info("Appended {0}", fullName);
+                    logger.Info("Appended \"{0}\"", fullName);
                     project.FilePaths.Add(fullName);
                     filters.Add(fullName, filter);
                 }

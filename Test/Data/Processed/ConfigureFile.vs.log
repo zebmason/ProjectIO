@@ -1,5 +1,5 @@
 CMakeParser command line application for creating a Visual Studio solution
 Copyright (c) 2020 Zebedee Mason
-Appended for reading ${SourceDirec}\ConfigureFile\CMakeLists.txt
+Appended for reading "${SourceDirec}\ConfigureFile\CMakeLists.txt"
 Reading CMake
 [${PROJECT_SOURCE_DIR}] Skipping  CONFIGURE_FILE ( "${CMAKE_CURRENT_SOURCE_DIR}\config.h.in" "${CMAKE_CURRENT_BINARY_DIR}\config.h" )
