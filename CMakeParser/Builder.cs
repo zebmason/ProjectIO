@@ -157,6 +157,8 @@ namespace ProjectIO.CMakeParser
             if (lists.Length == 0)
                 return "solution";
 
+            logger.Info("Appended for reading {}", lists);
+
             var sourceDirec = System.IO.Path.GetDirectoryName(lists);
             paths.Add("PROJECT_SOURCE_DIR", sourceDirec);
             filePaths.Remove(lists);
@@ -169,6 +171,7 @@ namespace ProjectIO.CMakeParser
                 filePaths.Remove(cache);
             }
 
+            logger.Info("Reading CMake");
             var state = new State(sourceDirec, binaryDirec);
             state.ReadCache(cache);
 

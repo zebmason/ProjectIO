@@ -138,5 +138,41 @@ namespace ProjectIO.Core
                 Mapping.Remove(wrapped);
             }
         }
+
+        public string Path(string link)
+        {
+            if (link.Length > 2 && link.Substring(0, 2) == "..")
+            {
+                link = System.IO.Path.Combine(Value("ProjectDir"), link);
+                link = System.IO.Path.GetFullPath(link);
+            }
+
+            return link;
+        }
+
+        public string Combine(string direc, string filePath)
+        {
+            filePath = RemoveAliases(filePath);
+
+            if (!filePath.Contains(":"))
+            {
+                filePath = System.IO.Path.Combine(direc, filePath);
+            }
+
+            filePath = filePath.Replace("/", "\\");
+            filePath = System.IO.Path.GetFullPath(filePath);
+            return filePath;
+        }
+
+        public string Combine(string filePath)
+        {
+            filePath = filePath.Replace(WrapAlias("ProjectDir"), Value("ProjectDir") + "\\");
+            if (ContainsAlias("SolutionDir"))
+            {
+                filePath = filePath.Replace(WrapAlias("SolutionDir"), Value("SolutionDir") + "\\");
+            }
+
+            return Combine(Value("ProjectDir"), filePath);
+        }
     }
 }

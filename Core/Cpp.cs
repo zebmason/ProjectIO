@@ -27,7 +27,7 @@ namespace ProjectIO.Core
             return exts.Contains(System.IO.Path.GetExtension(fileName));
         }
 
-        public static void Extract(List<string> filePaths, Dictionary<string, Project> projects)
+        public static void Extract(ILogger logger, List<string> filePaths, Dictionary<string, Project> projects)
         {
             var skipped = new List<string>();
             foreach (var filePath in filePaths)
@@ -40,6 +40,7 @@ namespace ProjectIO.Core
                     }
 
                     projects["<c++>"].FilePaths.Add(filePath);
+                    logger.Info("Appended for reading {}", filePath);
                     continue;
                 }
 

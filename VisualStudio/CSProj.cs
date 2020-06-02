@@ -29,7 +29,7 @@ namespace ProjectIO.VisualStudio
                     continue;
 
                 var link = i1.GetAttribute("Project");
-                link = _paths.RemoveAliases(link);
+                link = _paths.Path(link);
                 list.Add(link);
             }
 
@@ -38,7 +38,7 @@ namespace ProjectIO.VisualStudio
 
         public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects)
         {
-            var solutionPath = paths.Mapping["$(SolutionDir)"];
+            var solutionPath = paths.Value("SolutionDir");
             var proj = new CSProj(filePath, paths);
 
 

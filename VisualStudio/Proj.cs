@@ -29,6 +29,7 @@ namespace ProjectIO.VisualStudio
             _filePath = path;
             _paths = paths;
             _xml = new XMLUtils(path);
+            _paths.Add("ProjectDir", System.IO.Path.GetDirectoryName(_filePath));
         }
 
         public abstract string Name { get; }
@@ -45,7 +46,7 @@ namespace ProjectIO.VisualStudio
                 foreach (var i2 in l2)
                 {
                     var link = i2.GetAttribute("Include");
-                    link = _paths.RemoveAliases(link);
+                    link = _paths.Path(link);
                     list.Add(link);
                 }
             }
@@ -54,15 +55,5 @@ namespace ProjectIO.VisualStudio
         }
 
         public abstract List<string> Externals();
-
-        public void SetProjectPath()
-        {
-            _paths.Add("$(ProjectDir)", System.IO.Path.GetDirectoryName(_filePath));
-        }
-
-        public static void UnsetProjectPath(Core.Paths paths)
-        {
-            paths.Remove("$(ProjectDir)");
-        }
     }
 }

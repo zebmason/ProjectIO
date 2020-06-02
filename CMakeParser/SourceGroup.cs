@@ -49,7 +49,6 @@ namespace ProjectIO.CMakeParser
             if (bits.ContainsKey("TREE"))
             {
                 var root = state.FileOrDirectoryList(bits["TREE"])[0];
-                root = System.IO.Path.GetDirectoryName(root);
 
                 var prefix = string.Empty;
                 if (bits.ContainsKey("PREFIX"))

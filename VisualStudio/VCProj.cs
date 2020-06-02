@@ -62,7 +62,7 @@ namespace ProjectIO.VisualStudio
                     filter = PathToFilter(filename, sourceDirec);
                 }
 
-                var fullName = _paths.RemoveAliases(filename);
+                var fullName = _paths.Combine(filename);
                 dict2[fullName] = filter;
             }
 
@@ -81,7 +81,7 @@ namespace ProjectIO.VisualStudio
             {
                 var filter = PathToFilter(filename, sourceDirec);
 
-                var fullName = _paths.RemoveAliases(filename);
+                var fullName = _paths.Combine(filename);
                 dict2[fullName] = filter;
             }
 
@@ -109,7 +109,7 @@ namespace ProjectIO.VisualStudio
                     }
 
                     var include = inc;
-                    include = _paths.RemoveAliases(include);
+                    include = _paths.Combine(include);
                     includes.Add(include);
                 }
             }
@@ -119,7 +119,7 @@ namespace ProjectIO.VisualStudio
 
         public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters)
         {
-            var sourceDirec = paths.Mapping["$(SolutionDir)"];
+            var sourceDirec = paths.Value("SolutionDir");
             var proj = new VCProj(filePath, paths);
 
             var project = new Core.Cpp();

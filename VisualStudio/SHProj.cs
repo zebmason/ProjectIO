@@ -66,7 +66,7 @@ namespace ProjectIO.VisualStudio
 
         public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects)
         {
-            var solutionPath = paths.Mapping["$(SolutionDir)"];
+            var solutionPath = paths.Value("SolutionDir");
             var proj = new SHProj(filePath, paths);
 
             projects[proj.Name] = new Core.CSharp();

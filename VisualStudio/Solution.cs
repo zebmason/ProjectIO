@@ -10,7 +10,7 @@ namespace ProjectIO.VisualStudio
 
     public class Solution
     {
-        private static List<string> ReadVisualStudioSolution(string slnfilename)
+        private static List<string> ReadVisualStudioSolution(Core.ILogger logger, string slnfilename)
         {
             List<string> projects = new List<string>();
             var direc = System.IO.Path.GetDirectoryName(slnfilename);
@@ -33,13 +33,14 @@ namespace ProjectIO.VisualStudio
                 if (ext == ".csproj" || ext == ".shproj" || ext == ".vbproj" || ext == ".vcxproj")
                 {
                     projects.Add(System.IO.Path.Combine(direc, filename));
+                    logger.Info("Appended for reading {}", filename);
                 }
             }
 
             return projects;
         }
 
-        static private void SetSolutionDir(Core.Paths paths, string fileName, string direc)
+        static public void SetSolutionDir(Core.Paths paths, string fileName, string direc)
         {
             if (paths.ContainsAlias("SolutionDir"))
                 return;
@@ -67,27 +68,13 @@ namespace ProjectIO.VisualStudio
             {
                 logger.Info("Reading projects from {}", fileName);
                 direc = System.IO.Path.GetDirectoryName(fileName);
-                foreach (var name in ReadVisualStudioSolution(fileName))
+                foreach (var name in ReadVisualStudioSolution(logger, fileName))
                 {
                     Files(logger, paths, name, direc, fileNames, extensions, projectExts);
                 }
 
                 SetSolutionDir(paths, fileName, direc);
             }
-        }
-
-        static public List<KeyValuePair<string, string>> ExpandFileList(Core.ILogger logger, Core.Paths paths, string[] lines, string[] projectExts)
-        {
-            logger.Info("Creating file list");
-            var fileNames = new List<KeyValuePair<string, string>>();
-            var extensions = new List<string>();
-            var projectExtensions = new List<string>(projectExts);
-            foreach (var fileName in lines)
-            {
-                Files(logger, paths, fileName, string.Empty, fileNames, extensions, projectExtensions);
-            }
-
-            return fileNames;
         }
 
         private static void ExtractProjects(Core.ILogger logger, Core.Paths paths, List<string> filePaths, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters)
@@ -99,6 +86,7 @@ namespace ProjectIO.VisualStudio
 
                 if (ext == ".vcxproj")
                 {
+                    logger.Info("Appended for reading {}", filePath);
                     logger.Info("Reading Visual C++");
                     VCProj.Extract(logger, paths, filePath, projects, filters);
                     continue;
@@ -134,14 +122,12 @@ namespace ProjectIO.VisualStudio
             logger.Info("Reading projects from {}", solutionPath);
             var direc = System.IO.Path.GetDirectoryName(solutionPath);
             SetSolutionDir(paths, solutionPath, direc);
-            var filePaths = ReadVisualStudioSolution(solutionPath);
+            var filePaths = ReadVisualStudioSolution(logger, solutionPath);
             ExtractProjects(logger, paths, filePaths, projects, filters);
         }
 
         public static void Extract(Core.ILogger logger, Core.Paths paths, List<string> filePaths, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters)
         {
-            ExtractProjects(logger, paths, filePaths, projects, filters);
-
             var skipped = new List<string>();
             foreach (var filePath in filePaths)
             {
@@ -158,7 +144,14 @@ namespace ProjectIO.VisualStudio
             filePaths.Clear();
             filePaths.AddRange(skipped);
 
-            Proj.UnsetProjectPath(paths);
+
+            if (filePaths.Count > 0)
+            {
+                SetSolutionDir(paths, filePaths[0], string.Empty);
+            }
+
+            ExtractProjects(logger, paths, filePaths, projects, filters);
+            paths.Remove("$(ProjectDir)");
         }
     }
 }
