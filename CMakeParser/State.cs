@@ -6,7 +6,6 @@
 
 namespace ProjectIO.CMakeParser
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -22,7 +21,9 @@ namespace ProjectIO.CMakeParser
 
         public List<string> CompileDefinitions { get; } = new List<string>();
 
-        public State(string sourceDirec, string binaryDirec)
+        public Core.Paths Paths { get; }
+
+        public State(string sourceDirec, string binaryDirec, Core.Paths paths)
         {
             Variables["${PROJECT_SOURCE_DIR}"] = sourceDirec;
             Variables["${PROJECT_BINARY_DIR}"] = binaryDirec;
@@ -31,6 +32,8 @@ namespace ProjectIO.CMakeParser
 
             Switches["WIN32"] = true;
             Switches["UNIX"] = false;
+
+            Paths = paths;
         }
 
         public State(State state)
@@ -40,6 +43,7 @@ namespace ProjectIO.CMakeParser
             Switches = state.Switches.ToDictionary(entry => entry.Key, entry => entry.Value);
             IncludeDirectories = state.IncludeDirectories.ToList();
             CompileDefinitions = state.CompileDefinitions.ToList();
+            Paths = state.Paths;
         }
 
         public State SubDirectory(string sub)
@@ -75,6 +79,14 @@ namespace ProjectIO.CMakeParser
                 var val = System.Environment.GetEnvironmentVariable(env);
                 initial = initial.Replace("$ENV{" + env + "}", val);
                 index = initial.IndexOf("$ENV{");
+                if (!Paths.ContainsAlias(env))
+                {
+                    var path = val.Replace("\"", string.Empty);
+                    if (System.IO.Directory.Exists(path))
+                    {
+                        Paths.Add(env, path);
+                    }
+                }
             }
 
             return Replace(initial, 0);
@@ -110,7 +122,7 @@ namespace ProjectIO.CMakeParser
         {
             var items = new List<string>();
             list = Replace(" " + list + " ");
-            foreach (var item in list.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var item in list.Split(new char[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries))
             {
                 items.Add(item);
             }

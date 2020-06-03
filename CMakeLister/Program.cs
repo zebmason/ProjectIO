@@ -77,12 +77,14 @@ namespace ProjectIO.CMakeLister
 
             lists.AddCommand("include_directories", new CMakeParser.IncludeDirectories());
 
+            lists.AddCommand("add_compile_definitions", new CMakeParser.AddCompileDefinitions());
+
             return lists;
         }
 
         public static void MainFunc(string[] args, Core.ILogger logger)
         {
-            var state = new CMakeParser.State(args[0], (args.Length > 1) ? args[1] : string.Empty);
+            var state = new CMakeParser.State(args[0], (args.Length > 1) ? args[1] : string.Empty, new Core.Paths());
             var cmake = Instance(state, logger);
             cmake.Read();
         }

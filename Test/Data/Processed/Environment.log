@@ -1,0 +1,2 @@
+Setting ${SourceDirec}\Environment\sub1\foo.c to filter Base\Sub1
+[${PROJECT_SOURCE_DIR}] Adding ${SourceDirec}\Environment\sub1\foo.c to SourceGroups

@@ -26,6 +26,14 @@ namespace ProjectIO.Test
         }
 
         [Test]
+        public void Environment()
+        {
+            System.Environment.SetEnvironmentVariable("TEST_CMAKE_SUB1_PATH", System.IO.Path.Combine(Utilities.GetDataDirec(), @"Source\Environment\sub1"));
+            System.Environment.SetEnvironmentVariable("TEST_CMAKE_CONSOLE", "\"_CONSOLE\"");
+            ListerUtilities.ReadTest(@"Environment");
+        }
+
+        [Test]
         public void VisualStudio()
         {
             VSUtilities.ReadTest(@"ConfigureFile", new List<string> { "lib" });

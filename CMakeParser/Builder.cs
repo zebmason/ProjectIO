@@ -181,7 +181,7 @@ namespace ProjectIO.CMakeParser
             }
 
             logger.Info("Reading CMake");
-            var state = new State(sourceDirec, binaryDirec);
+            var state = new State(sourceDirec, binaryDirec, paths);
             state.ReadCache(cache);
 
             var builder = Instance(state, projects, filters, logger);

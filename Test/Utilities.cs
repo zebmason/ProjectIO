@@ -114,6 +114,12 @@ namespace ProjectIO.Test
                 System.IO.File.Delete(fileName);
             }
         }
+
+        public static string GetDataDirec()
+        {
+            var utils = new Utilities();
+            return utils._dataDirec;
+        }
     }
 
     class ListerUtilities : Utilities
