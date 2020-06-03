@@ -12,19 +12,25 @@ namespace ProjectIO.CMakeParser
     {
         public void Initialise(State state)
         {
-            state.Properties["INCLUDE_DIRECTORIES"] = string.Empty;
             state.Properties["CMAKE_INCLUDE_DIRECTORIES_BEFORE"] = "OFF";
         }
 
         public void Command(KeyValuePair<string, string> command, State state)
         {
-            var bits = Utilities.Split(command.Value, new string[] { "AFTER", "BEFORE", "SYSTEM" });
             var line = command.Value.Replace("AFTER", string.Empty).Replace("BEFORE", string.Empty).Replace("SYSTEM", string.Empty);
-            line = state.Replace(line);
-            if (bits.ContainsKey("AFTER") || state.Properties["CMAKE_INCLUDE_DIRECTORIES_BEFORE"] == "OFF")
-                state.Properties["INCLUDE_DIRECTORIES"] = string.Format("{0} {1}", state.Properties["INCLUDE_DIRECTORIES"], line);
+            var dirs = state.FileOrDirectoryList(line);
+
+            if (command.Value.Contains("AFTER") || state.Properties["CMAKE_INCLUDE_DIRECTORIES_BEFORE"] == "OFF")
+            {
+                state.IncludeDirectories.AddRange(dirs);
+            }
             else
-                state.Properties["INCLUDE_DIRECTORIES"] = string.Format("{1} {0}", state.Properties["INCLUDE_DIRECTORIES"], line);
+            {
+                for (int i = dirs.Count - 1; i > -1; --i)
+                {
+                    state.IncludeDirectories.Insert(0, dirs[i]);
+                }
+            }
         }
     }
 }

@@ -76,10 +76,19 @@ namespace ProjectIO.CMakeParser
                 _projects = projects;
             }
 
-            public void AddIncludeDirectoriesToBinary(string name, IEnumerable<string> directories)
+            public void AddIncludeDirectoriesToBinary(string name, List<string> directories, bool before)
             {
                 var project = _projects[name] as Core.Cpp;
-                project.IncludeDirectories.AddRange(directories);
+
+                if (before)
+                {
+                    for (int i = directories.Count - 1; i > -1; --i)
+                    {
+                        project.IncludeDirectories.Insert(0, directories[i]);
+                    }
+                }
+                else
+                    project.IncludeDirectories.AddRange(directories);
             }
         }
 

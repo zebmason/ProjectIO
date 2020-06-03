@@ -12,7 +12,7 @@ namespace ProjectIO.CMakeParser
     {
         public interface IHandler
         {
-            void AddIncludeDirectoriesToBinary(string name, IEnumerable<string> library);
+            void AddIncludeDirectoriesToBinary(string name, List<string> library, bool before);
         }
 
         private readonly IHandler _handler;
@@ -31,8 +31,10 @@ namespace ProjectIO.CMakeParser
             var pair = Utilities.Split(command.Value);
             var name = state.Replace(pair.Key);
 
-            var libraries = state.FileOrDirectoryList(pair.Value.Replace(" PUBLIC ", " "));
-            _handler.AddIncludeDirectoriesToBinary(name, libraries);
+            var line = pair.Value.Replace("BEFORE", string.Empty).Replace("SYSTEM", string.Empty);
+            line = line.Replace("INTERFACE", string.Empty).Replace("PUBLIC", string.Empty).Replace("PRIVATE", string.Empty);
+            var libraries = state.FileOrDirectoryList(line);
+            _handler.AddIncludeDirectoriesToBinary(name, libraries, pair.Value.Contains("BEFORE"));
         }
     }
 }
