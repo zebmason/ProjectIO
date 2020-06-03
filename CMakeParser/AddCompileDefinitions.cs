@@ -12,12 +12,19 @@ namespace ProjectIO.CMakeParser
     {
         public void Initialise(State state)
         {
-            state.Properties["COMPILE_DEFINITIONS"] = string.Empty;
+        }
+
+        public static string[] Definitions(string line, State state)
+        {
+            line = state.Replace(line);
+            line = line.Replace("\"", string.Empty);
+            return line.Split(new char[] { ' ', '\t' }, System.StringSplitOptions.RemoveEmptyEntries);
         }
 
         public void Command(KeyValuePair<string, string> command, State state)
         {
-            state.Properties["COMPILE_DEFINITIONS"] = string.Format("{0} {1}", state.Properties["COMPILE_DEFINITIONS"], command.Value);
+            var defns = Definitions(command.Value, state);
+            state.CompileDefinitions.AddRange(defns);
         }
     }
 }

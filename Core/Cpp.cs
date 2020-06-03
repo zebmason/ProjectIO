@@ -11,7 +11,7 @@ namespace ProjectIO.Core
 
     public class Cpp : Project
     {
-        public string CompileDefinitions { get; set; } = string.Empty;
+        public List<string> CompileDefinitions { get; } = new List<string>();
 
         public List<string> IncludeDirectories { get; } = new List<string>();
 

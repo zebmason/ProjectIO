@@ -32,7 +32,7 @@ namespace ProjectIO.VisualStudio
 
         private static string Definitions(Core.Cpp project)
         {
-            var definitions = project.CompileDefinitions.Split().ToList();
+            var definitions = project.CompileDefinitions;
             if (project.IsExe)
                 definitions.Add("_CONSOLE");
 

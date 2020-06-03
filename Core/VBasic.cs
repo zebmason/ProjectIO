@@ -11,7 +11,7 @@ namespace ProjectIO.Core
 
     public class VBasic : Project
     {
-        public string CompileDefinitions { get; set; } = string.Empty;
+        public List<string> CompileDefinitions { get; } = new List<string>();
 
         public static bool IsSource(string fileName)
         {

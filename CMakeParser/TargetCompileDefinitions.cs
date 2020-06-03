@@ -12,7 +12,7 @@ namespace ProjectIO.CMakeParser
     {
         public interface IHandler
         {
-            void AddCompileDefinitionsToBinary(string name, string library);
+            void AddCompileDefinitionsToBinary(string name, IEnumerable<string> defns);
         }
 
         private readonly IHandler _handler;
@@ -31,10 +31,9 @@ namespace ProjectIO.CMakeParser
             var pair = Utilities.Split(command.Value);
             var name = state.Replace(pair.Key);
 
-            var list = pair.Value.Replace(" INTERFACE ", " ");
-            list = list.Replace(" PUBLIC ", " ");
-            list = list.Replace(" PRIVATE ", " ");
-            _handler.AddCompileDefinitionsToBinary(name, list);
+            var line = pair.Value.Replace("INTERFACE", string.Empty).Replace("PUBLIC", string.Empty).Replace("PRIVATE", string.Empty);
+            var defns = AddCompileDefinitions.Definitions(line, state);
+            _handler.AddCompileDefinitionsToBinary(name, defns);
         }
     }
 }

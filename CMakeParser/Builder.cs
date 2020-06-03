@@ -26,10 +26,10 @@ namespace ProjectIO.CMakeParser
             {
                 var project = new Core.Cpp()
                 {
-                    CompileDefinitions = state.Properties["COMPILE_DEFINITIONS"],
                     IsExe = command != "add_library"
                 };
 
+                project.CompileDefinitions.AddRange(state.CompileDefinitions);
                 project.IncludeDirectories.AddRange(state.IncludeDirectories);
                 project.FilePaths.AddRange(filePaths);
                 _projects[name] = project;
@@ -60,10 +60,10 @@ namespace ProjectIO.CMakeParser
                 _projects = projects;
             }
 
-            public void AddCompileDefinitionsToBinary(string name, string definitions)
+            public void AddCompileDefinitionsToBinary(string name, IEnumerable<string> definitions)
             {
                 var project = _projects[name] as Core.Cpp;
-                project.CompileDefinitions += " " + definitions;
+                project.CompileDefinitions.AddRange(definitions);
             }
         }
 

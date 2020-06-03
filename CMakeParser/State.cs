@@ -20,6 +20,8 @@ namespace ProjectIO.CMakeParser
 
         public List<string> IncludeDirectories { get; } = new List<string>();
 
+        public List<string> CompileDefinitions { get; } = new List<string>();
+
         public State(string sourceDirec, string binaryDirec)
         {
             Variables["${PROJECT_SOURCE_DIR}"] = sourceDirec;
@@ -37,6 +39,7 @@ namespace ProjectIO.CMakeParser
             Properties = state.Properties.ToDictionary(entry => entry.Key, entry => entry.Value);
             Switches = state.Switches.ToDictionary(entry => entry.Key, entry => entry.Value);
             IncludeDirectories = state.IncludeDirectories.ToList();
+            CompileDefinitions = state.CompileDefinitions.ToList();
         }
 
         public State SubDirectory(string sub)
