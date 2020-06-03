@@ -10,7 +10,7 @@
     <license type="expression">LGPL-2.1-only</license>
     <projectUrl>https://github.com/zebmason/ProjectIO</projectUrl>
     <description>A tool to create a Visual Studio solution from a CMake project.</description>
-    <releaseNotes>Add extra logging.</releaseNotes>
+    <releaseNotes>Bug fixes.</releaseNotes>
     <copyright>Copyright 2020</copyright>
     <tags>CMake c++</tags>
     <dependencies>
