@@ -126,7 +126,7 @@ namespace ProjectIO.VisualStudio
             ExtractProjects(logger, paths, filePaths, projects, filters);
         }
 
-        public static void Extract(Core.ILogger logger, Core.Paths paths, List<string> filePaths, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters)
+        public static void Extract(Core.ILogger logger, Core.Paths paths, List<string> filePaths, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters, string configPlatform = "Debug|AnyCPU")
         {
             var skipped = new List<string>();
             foreach (var filePath in filePaths)

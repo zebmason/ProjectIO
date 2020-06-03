@@ -88,6 +88,10 @@
       <Project>{6bfa2ca1-9119-4104-a081-011e1d038a22}</Project>
       <Name>VisualStudio</Name>
     </ProjectReference>
+    <ProjectReference Include="..\VStoVS\VStoVS.csproj">
+      <Project>{da0c19f6-90ff-4773-8e47-7c1cbbe87f8f}</Project>
+      <Name>VStoVS</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
