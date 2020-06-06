@@ -241,7 +241,7 @@ namespace ProjectIO.CMakeParser
                     continue;
                 }
 
-                _logger.Info(string.Format("Skipping {0}", line), _state);
+                _logger.Warn(string.Format("Skipping {0}", line.Trim()), _state);
             }
         }
     }
