@@ -79,6 +79,8 @@ namespace ProjectIO.VisualStudio
 
         private static void ExtractProjects(Core.ILogger logger, Core.Paths paths, List<string> filePaths, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters)
         {
+            var dependencies = new Dictionary<Core.Project, List<string>>();
+            var mapping = new Dictionary<string, string>();
             var skipped = new List<string>();
             foreach (var filePath in filePaths)
             {
@@ -88,25 +90,29 @@ namespace ProjectIO.VisualStudio
                 {
                     logger.Info("Appended for reading \"{0}\"", filePath);
                     logger.Info("Reading Visual C++");
-                    VCProj.Extract(logger, paths, filePath, projects, filters);
+                    var proj = VCProj.Extract(logger, paths, filePath, projects, filters, dependencies);
+                    mapping[filePath] = proj;
                     continue;
                 }
 
                 if (ext == ".csproj")
                 {
-                    CSProj.Extract(logger, paths, filePath,  projects);
+                    var proj = CSProj.Extract(logger, paths, filePath,  projects, dependencies);
+                    mapping[filePath] = proj;
                     continue;
                 }
 
                 if (ext == ".shproj")
                 {
-                    SHProj.Extract(logger, paths, filePath, projects);
+                    var proj = SHProj.Extract(logger, paths, filePath, projects, dependencies);
+                    mapping[filePath] = proj;
                     continue;
                 }
 
                 if (ext == ".vbproj")
                 {
-                    VBProj.Extract(logger, paths, filePath, projects);
+                    var proj = VBProj.Extract(logger, paths, filePath, projects, dependencies);
+                    mapping[filePath] = proj;
                     continue;
                 }
 
@@ -115,6 +121,18 @@ namespace ProjectIO.VisualStudio
 
             filePaths.Clear();
             filePaths.AddRange(skipped);
+
+            foreach (var dep in dependencies)
+            {
+                var proj = dep.Key;
+                foreach (var filePath in dep.Value)
+                {
+                    if (mapping.ContainsKey(filePath))
+                    {
+                        proj.Dependencies.Add(mapping[filePath]);
+                    }
+                }
+            }
         }
 
         private static void Extract(Core.ILogger logger, Core.Paths paths, string solutionPath, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters)

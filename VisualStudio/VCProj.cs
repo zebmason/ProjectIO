@@ -117,7 +117,7 @@ namespace ProjectIO.VisualStudio
             return includes;
         }
 
-        public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters)
+        public static string Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters, Dictionary<Core.Project, List<string>> dependencies)
         {
             var sourceDirec = paths.Value("SolutionDir");
             var proj = new VCProj(filePath, paths);
@@ -125,11 +125,7 @@ namespace ProjectIO.VisualStudio
             var project = new Core.Cpp();
             projects[proj.Name] = project;
             project.IncludeDirectories.AddRange(proj.Includes());
-            foreach (var dep in proj.Dependencies())
-            {
-                var stub = System.IO.Path.GetFileNameWithoutExtension(dep);
-                project.Dependencies.Add(stub);
-            }
+            dependencies[projects[proj.Name]] = proj.Dependencies();
 
             foreach (var type in new string[] { "ClInclude", "ClCompile" })
             {
@@ -143,6 +139,8 @@ namespace ProjectIO.VisualStudio
                     filters.Add(fullName, filter);
                 }
             }
+
+            return proj.Name;
         }
     }
 }

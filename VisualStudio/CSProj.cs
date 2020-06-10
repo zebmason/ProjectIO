@@ -36,20 +36,16 @@ namespace ProjectIO.VisualStudio
             return list;
         }
 
-        public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects)
+        public static string Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<Core.Project, List<string>> dependencies)
         {
             var solutionPath = paths.Value("SolutionDir");
             var proj = new CSProj(filePath, paths);
 
-
             projects[proj.Name] = new Core.CSharp();
-            foreach (var dep in proj.Dependencies())
-            {
-                var stub = System.IO.Path.GetFileNameWithoutExtension(dep);
-                projects[proj.Name].Dependencies.Add(stub);
-            }
-
+            dependencies[projects[proj.Name]] = proj.Dependencies();
             proj.Compiles(projects[proj.Name].FilePaths, logger, paths);
+
+            return proj.Name;
         }
     }
 }
