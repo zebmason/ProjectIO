@@ -11,8 +11,6 @@ namespace ProjectIO.Core
 
     public class VBasic : Project
     {
-        public List<string> CompileDefinitions { get; } = new List<string>();
-
         public static bool IsSource(string fileName)
         {
             var exts = new string[] { ".vb", ".vbs" };

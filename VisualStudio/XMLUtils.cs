@@ -42,6 +42,21 @@ namespace ProjectIO.VisualStudio
             }
         }
 
+        internal System.Xml.XmlElement Group(string name, string condition)
+        {
+            var nodes = new List<System.Xml.XmlElement>();
+            SelectNodes(_root, name, nodes);
+            foreach (var node in nodes)
+            {
+                if (node.HasAttribute("Condition") && node.GetAttribute("Condition").Contains(condition))
+                {
+                    return node;
+                }
+            }
+
+            return null;
+        }
+
         public List<string> Compiles(string name)
         {
             var list = new List<string>();

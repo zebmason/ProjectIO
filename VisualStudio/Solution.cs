@@ -77,7 +77,7 @@ namespace ProjectIO.VisualStudio
             }
         }
 
-        private static void ExtractProjects(Core.ILogger logger, Core.Paths paths, List<string> filePaths, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters)
+        private static void ExtractProjects(Core.ILogger logger, Core.Paths paths, List<string> filePaths, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters, string configPlatform)
         {
             var dependencies = new Dictionary<Core.Project, List<string>>();
             var mapping = new Dictionary<string, string>();
@@ -90,25 +90,25 @@ namespace ProjectIO.VisualStudio
                 {
                     logger.Info("Appended for reading \"{0}\"", filePath);
                     logger.Info("Reading Visual C++");
-                    VCProj.Extract(logger, paths, filePath, projects, filters, dependencies, mapping);
+                    VCProj.Extract(logger, paths, filePath, projects, filters, dependencies, mapping, configPlatform);
                     continue;
                 }
 
                 if (ext == ".csproj")
                 {
-                    CSProj.Extract(logger, paths, filePath,  projects, dependencies, mapping);
+                    CSProj.Extract(logger, paths, filePath,  projects, dependencies, mapping, configPlatform);
                     continue;
                 }
 
                 if (ext == ".shproj")
                 {
-                    SHProj.Extract(logger, paths, filePath, projects, dependencies, mapping);
+                    SHProj.Extract(logger, paths, filePath, projects, dependencies, mapping, configPlatform);
                     continue;
                 }
 
                 if (ext == ".vbproj")
                 {
-                    VBProj.Extract(logger, paths, filePath, projects, dependencies, mapping);
+                    VBProj.Extract(logger, paths, filePath, projects, dependencies, mapping, configPlatform);
                     continue;
                 }
 
@@ -131,13 +131,13 @@ namespace ProjectIO.VisualStudio
             }
         }
 
-        private static void Extract(Core.ILogger logger, Core.Paths paths, string solutionPath, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters)
+        private static void Extract(Core.ILogger logger, Core.Paths paths, string solutionPath, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters, string configPlatform)
         {
             logger.Info("Reading projects from \"{0}\"", solutionPath);
             var direc = System.IO.Path.GetDirectoryName(solutionPath);
             SetSolutionDir(paths, solutionPath, direc);
             var filePaths = ReadVisualStudioSolution(logger, solutionPath);
-            ExtractProjects(logger, paths, filePaths, projects, filters);
+            ExtractProjects(logger, paths, filePaths, projects, filters, configPlatform);
         }
 
         public static void Extract(Core.ILogger logger, Core.Paths paths, List<string> filePaths, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters, string configPlatform = "Debug|AnyCPU")
@@ -148,7 +148,7 @@ namespace ProjectIO.VisualStudio
                 var ext = System.IO.Path.GetExtension(filePath);
                 if (ext == ".sln")
                 {
-                    Extract(logger, paths, filePath, projects, filters);
+                    Extract(logger, paths, filePath, projects, filters, configPlatform);
                     continue;
                 }
 
@@ -164,7 +164,7 @@ namespace ProjectIO.VisualStudio
                 SetSolutionDir(paths, filePaths[0], string.Empty);
             }
 
-            ExtractProjects(logger, paths, filePaths, projects, filters);
+            ExtractProjects(logger, paths, filePaths, projects, filters, configPlatform);
             paths.Remove("$(ProjectDir)");
         }
     }

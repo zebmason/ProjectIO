@@ -10,8 +10,8 @@ namespace ProjectIO.VisualStudio
 
     internal class CSProj : NetProj
     {
-        public CSProj(string path, Core.Paths paths)
-            : base(path, paths)
+        public CSProj(string path, Core.Paths paths, string configPlatform)
+            : base(path, paths, configPlatform)
         {
         }
 
@@ -36,14 +36,39 @@ namespace ProjectIO.VisualStudio
             return list;
         }
 
-        public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<Core.Project, List<string>> dependencies, Dictionary<string, string> mapping)
+        public List<string> DefineConstants()
+        {
+            var defns = new List<string>();
+            var group = _xml.Group("PropertyGroup", _configPlatform);
+            if (group is null)
+                return defns;
+
+            var nodes = new List<System.Xml.XmlElement>();
+            _xml.SelectNodes(group, "DefineConstants", nodes, true);
+
+            foreach (var node in nodes)
+            {
+                var line = node.InnerText;
+                foreach (var defn in line.Split(';'))
+                {
+                    defns.Add(defn);
+                }
+            }
+
+            return defns;
+        }
+
+        public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<Core.Project, List<string>> dependencies, Dictionary<string, string> mapping, string configPlatform)
         {
             var solutionPath = paths.Value("SolutionDir");
-            var proj = new CSProj(filePath, paths);
+            var proj = new CSProj(filePath, paths, configPlatform);
 
-            projects[proj.Name] = new Core.CSharp();
-            dependencies[projects[proj.Name]] = proj.Dependencies();
-            proj.Compiles(projects[proj.Name].FilePaths, logger, paths);
+            var project = new Core.CSharp();
+            projects[proj.Name] = project;
+            project.CompileDefinitions.AddRange(proj.DefineConstants());
+
+            dependencies[project] = proj.Dependencies();
+            proj.Compiles(project.FilePaths, logger, paths);
             mapping[filePath] = proj.Name;
         }
     }

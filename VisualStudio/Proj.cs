@@ -14,6 +14,8 @@ namespace ProjectIO.VisualStudio
 
         protected Core.Paths _paths;
 
+        protected string _configPlatform;
+
         public virtual string FilePath
         {
             get
@@ -24,10 +26,11 @@ namespace ProjectIO.VisualStudio
 
         protected XMLUtils _xml;
 
-        public Proj(string path, Core.Paths paths)
+        public Proj(string path, Core.Paths paths, string configPlatform)
         {
             _filePath = path;
             _paths = paths;
+            _configPlatform = configPlatform;
             _xml = new XMLUtils(path);
             _paths.Add("ProjectDir", System.IO.Path.GetDirectoryName(_filePath));
         }

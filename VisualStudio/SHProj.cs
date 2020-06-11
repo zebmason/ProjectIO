@@ -34,8 +34,8 @@ namespace ProjectIO.VisualStudio
             }
         }
 
-        public SHProj(string path, Core.Paths paths)
-            : base(path, paths)
+        public SHProj(string path, Core.Paths paths, string configPlatform)
+            : base(path, paths, configPlatform)
         {
         }
 
@@ -64,10 +64,10 @@ namespace ProjectIO.VisualStudio
             xml2.DotNetCompiles(this, files, logger, filePath);
         }
 
-        public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<Core.Project, List<string>> dependencies, Dictionary<string, string> mapping)
+        public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<Core.Project, List<string>> dependencies, Dictionary<string, string> mapping, string configPlatform)
         {
             var solutionPath = paths.Value("SolutionDir");
-            var proj = new SHProj(filePath, paths);
+            var proj = new SHProj(filePath, paths, configPlatform);
 
             projects[proj.Name] = new Core.CSharp();
             dependencies[projects[proj.Name]] = proj.Dependencies();

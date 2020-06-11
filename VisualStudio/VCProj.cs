@@ -10,8 +10,8 @@ namespace ProjectIO.VisualStudio
 
     internal class VCProj : Proj
     {
-        public VCProj(string path, Core.Paths paths)
-            : base(path, paths)
+        public VCProj(string path, Core.Paths paths, string configPlatform)
+            : base(path, paths, configPlatform)
         {
         }
 
@@ -91,12 +91,14 @@ namespace ProjectIO.VisualStudio
         public HashSet<string> Includes()
         {
             var includes = new HashSet<string>();
-            var direc = System.IO.Path.GetDirectoryName(_filePath);
+            var group = _xml.Group("ItemDefinitionGroup", _configPlatform);
+            if (group is null)
+                return includes;
 
             var nodes = new List<System.Xml.XmlElement>();
-            _xml.SelectNodes(_xml._root, "AdditionalIncludeDirectories", nodes);
-            _xml.SelectNodes(_xml._root, "NMakeIncludeSearchPath", nodes);
-            _xml.SelectNodes(_xml._root, "IncludePath", nodes);
+            _xml.SelectNodes(group, "AdditionalIncludeDirectories", nodes);
+            _xml.SelectNodes(group, "NMakeIncludeSearchPath", nodes);
+            _xml.SelectNodes(group, "IncludePath", nodes);
 
             foreach (var node in nodes)
             {
@@ -117,14 +119,48 @@ namespace ProjectIO.VisualStudio
             return includes;
         }
 
-        public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters, Dictionary<Core.Project, List<string>> dependencies, Dictionary<string, string> mapping)
+        public List<string> CompileDefinitions()
+        {
+            var defns = new List<string>();
+            var group = _xml.Group("ItemDefinitionGroup", _configPlatform);
+            if (group is null)
+                return defns;
+
+            var nodes = new List<System.Xml.XmlElement>();
+            _xml.SelectNodes(group, "PreprocessorDefinitions", nodes, true);
+
+            foreach (var node in nodes)
+            {
+                var line = node.InnerText;
+                foreach (var defn in line.Split(';'))
+                {
+                    if (defn == "%(PreprocessorDefinitions)" || defn.Length == 0)
+                    {
+                        continue;
+                    }
+
+                    defns.Add(defn);
+                }
+            }
+
+            return defns;
+        }
+
+        public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters, Dictionary<Core.Project, List<string>> dependencies, Dictionary<string, string> mapping, string configPlatform)
         {
             var sourceDirec = paths.Value("SolutionDir");
-            var proj = new VCProj(filePath, paths);
+            var proj = new VCProj(filePath, paths, configPlatform);
 
             var project = new Core.Cpp();
             projects[proj.Name] = project;
             project.IncludeDirectories.AddRange(proj.Includes());
+            project.CompileDefinitions.AddRange(proj.CompileDefinitions());
+            if (project.CompileDefinitions.Contains("_CONSOLE"))
+            {
+                project.CompileDefinitions.Remove("_CONSOLE");
+                project.IsExe = true;
+            }
+
             dependencies[projects[proj.Name]] = proj.Dependencies();
 
             foreach (var type in new string[] { "ClInclude", "ClCompile" })
