@@ -90,29 +90,25 @@ namespace ProjectIO.VisualStudio
                 {
                     logger.Info("Appended for reading \"{0}\"", filePath);
                     logger.Info("Reading Visual C++");
-                    var proj = VCProj.Extract(logger, paths, filePath, projects, filters, dependencies);
-                    mapping[filePath] = proj;
+                    VCProj.Extract(logger, paths, filePath, projects, filters, dependencies, mapping);
                     continue;
                 }
 
                 if (ext == ".csproj")
                 {
-                    var proj = CSProj.Extract(logger, paths, filePath,  projects, dependencies);
-                    mapping[filePath] = proj;
+                    CSProj.Extract(logger, paths, filePath,  projects, dependencies, mapping);
                     continue;
                 }
 
                 if (ext == ".shproj")
                 {
-                    var proj = SHProj.Extract(logger, paths, filePath, projects, dependencies);
-                    mapping[filePath] = proj;
+                    SHProj.Extract(logger, paths, filePath, projects, dependencies, mapping);
                     continue;
                 }
 
                 if (ext == ".vbproj")
                 {
-                    var proj = VBProj.Extract(logger, paths, filePath, projects, dependencies);
-                    mapping[filePath] = proj;
+                    VBProj.Extract(logger, paths, filePath, projects, dependencies, mapping);
                     continue;
                 }
 

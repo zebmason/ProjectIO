@@ -117,7 +117,7 @@ namespace ProjectIO.VisualStudio
             return includes;
         }
 
-        public static string Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters, Dictionary<Core.Project, List<string>> dependencies)
+        public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters, Dictionary<Core.Project, List<string>> dependencies, Dictionary<string, string> mapping)
         {
             var sourceDirec = paths.Value("SolutionDir");
             var proj = new VCProj(filePath, paths);
@@ -140,7 +140,7 @@ namespace ProjectIO.VisualStudio
                 }
             }
 
-            return proj.Name;
+            mapping[filePath] = proj.Name;
         }
     }
 }
