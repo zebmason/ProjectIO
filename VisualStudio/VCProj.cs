@@ -99,9 +99,9 @@ namespace ProjectIO.VisualStudio
             }
 
             var nodes = new List<System.Xml.XmlElement>();
-            _xml.SelectNodes(group, "AdditionalIncludeDirectories", nodes);
-            _xml.SelectNodes(group, "NMakeIncludeSearchPath", nodes);
-            _xml.SelectNodes(group, "IncludePath", nodes);
+            _xml.SelectNodes(group, "AdditionalIncludeDirectories", nodes, true);
+            _xml.SelectNodes(group, "NMakeIncludeSearchPath", nodes, true);
+            _xml.SelectNodes(group, "IncludePath", nodes, true);
 
             foreach (var node in nodes)
             {
