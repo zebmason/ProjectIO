@@ -119,6 +119,12 @@ namespace ProjectIO.VisualStudio
                 }
             }
 
+            var direc = System.IO.Path.GetDirectoryName(_filePath);
+            if (!includes.Contains(direc))
+            {
+                includes.Add(direc);
+            }
+
             return includes;
         }
 
