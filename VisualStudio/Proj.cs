@@ -10,6 +10,8 @@ namespace ProjectIO.VisualStudio
 
     internal abstract class Proj
     {
+        protected Core.ILogger _logger;
+
         protected string _filePath;
 
         protected Core.Paths _paths;
@@ -26,8 +28,9 @@ namespace ProjectIO.VisualStudio
 
         protected XMLUtils _xml;
 
-        public Proj(string path, Core.Paths paths, string configPlatform)
+        public Proj(Core.ILogger logger, string path, Core.Paths paths, string configPlatform)
         {
+            _logger = logger;
             _filePath = path;
             _paths = paths;
             _configPlatform = configPlatform;

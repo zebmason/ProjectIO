@@ -10,8 +10,8 @@ namespace ProjectIO.VisualStudio
 
     internal class VCProj : Proj
     {
-        public VCProj(string path, Core.Paths paths, string configPlatform)
-            : base(path, paths, configPlatform)
+        public VCProj(Core.ILogger logger, string path, Core.Paths paths, string configPlatform)
+            : base(logger, path, paths, configPlatform)
         {
         }
 
@@ -93,7 +93,10 @@ namespace ProjectIO.VisualStudio
             var includes = new HashSet<string>();
             var group = _xml.Group("ItemDefinitionGroup", _configPlatform);
             if (group is null)
+            {
+                _logger.Warn(string.Format("No ItemDefinitionGroup {0} in \"{1}\"", _configPlatform, _filePath));
                 return includes;
+            }
 
             var nodes = new List<System.Xml.XmlElement>();
             _xml.SelectNodes(group, "AdditionalIncludeDirectories", nodes);
@@ -124,7 +127,10 @@ namespace ProjectIO.VisualStudio
             var defns = new List<string>();
             var group = _xml.Group("ItemDefinitionGroup", _configPlatform);
             if (group is null)
+            {
+                _logger.Warn(string.Format("No ItemDefinitionGroup {0} in \"{1}\"", _configPlatform, _filePath));
                 return defns;
+            }
 
             var nodes = new List<System.Xml.XmlElement>();
             _xml.SelectNodes(group, "PreprocessorDefinitions", nodes, true);
@@ -149,7 +155,7 @@ namespace ProjectIO.VisualStudio
         public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters, Dictionary<Core.Project, List<string>> dependencies, Dictionary<string, string> mapping, string configPlatform)
         {
             var sourceDirec = paths.Value("SolutionDir");
-            var proj = new VCProj(filePath, paths, configPlatform);
+            var proj = new VCProj(logger, filePath, paths, configPlatform);
 
             var project = new Core.Cpp();
             projects[proj.Name] = project;

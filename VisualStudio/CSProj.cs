@@ -10,8 +10,8 @@ namespace ProjectIO.VisualStudio
 
     internal class CSProj : NetProj
     {
-        public CSProj(string path, Core.Paths paths, string configPlatform)
-            : base(path, paths, configPlatform)
+        public CSProj(Core.ILogger logger, string path, Core.Paths paths, string configPlatform)
+            : base(logger, path, paths, configPlatform)
         {
         }
 
@@ -41,7 +41,10 @@ namespace ProjectIO.VisualStudio
             var defns = new List<string>();
             var group = _xml.Group("PropertyGroup", _configPlatform);
             if (group is null)
+            {
+                _logger.Warn(string.Format("No PropertyGroup {0} in \"{1}\"", _configPlatform, _filePath));
                 return defns;
+            }
 
             var nodes = new List<System.Xml.XmlElement>();
             _xml.SelectNodes(group, "DefineConstants", nodes, true);
@@ -61,7 +64,7 @@ namespace ProjectIO.VisualStudio
         public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<Core.Project, List<string>> dependencies, Dictionary<string, string> mapping, string configPlatform)
         {
             var solutionPath = paths.Value("SolutionDir");
-            var proj = new CSProj(filePath, paths, configPlatform);
+            var proj = new CSProj(logger, filePath, paths, configPlatform);
 
             var project = new Core.CSharp();
             projects[proj.Name] = project;
