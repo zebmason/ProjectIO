@@ -207,13 +207,13 @@ namespace ProjectIO.Test
 
         internal void CompareFiles(string result, string processed, string replace = "", string with = "")
         {
-            result = this.Combine(result);
+            result = Combine(result);
             if (!System.IO.File.Exists(result))
             {
                 result.Should().Be("Not missing!");
             }
 
-            processed = this.Combine(processed);
+            processed = Combine(processed);
             if (!System.IO.File.Exists(processed))
             {
                 processed.Should().Be("Not missing!");
