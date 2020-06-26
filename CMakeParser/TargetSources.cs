@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="TargetLinkLibraries.cs" company="Zebedee Mason">
+// <copyright file="TargetSources.cs" company="Zebedee Mason">
 //     Copyright (c) 2020 Zebedee Mason.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -8,22 +8,18 @@ namespace ProjectIO.CMakeParser
 {
     using System.Collections.Generic;
 
-    public class TargetLinkLibraries : ICommand
+    class TargetSources : ICommand
     {
         public interface IHandler
         {
-            void AddLibrariesToBinary(string name, IEnumerable<string> libraries);
+            void AddSourceToBinary(string name, string source);
         }
 
         private readonly IHandler _handler;
 
-        public TargetLinkLibraries(IHandler handler)
+        public TargetSources(IHandler handler)
         {
             _handler = handler;
-        }
-
-        public void Initialise(State state)
-        {
         }
 
         public void Command(KeyValuePair<string, string> command, State state)
@@ -31,8 +27,15 @@ namespace ProjectIO.CMakeParser
             var pair = Utilities.Split(command.Value);
             var name = state.Replace(pair.Key);
             var list = " " + pair.Value;
-            var libraries = state.FileOrDirectoryList(list.Replace(" PUBLIC ", " "));
-            _handler.AddLibrariesToBinary(name, libraries);
+            var fileNames = state.FileOrDirectoryList(list.Replace(" INTERFACE ", " ").Replace(" PUBLIC ", " ").Replace(" PRIVATE ", " "));
+            foreach (var fileName in fileNames)
+            {
+                _handler.AddSourceToBinary(name, fileName);
+            }
+        }
+
+        public void Initialise(State state)
+        {
         }
     }
 }

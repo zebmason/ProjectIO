@@ -27,6 +27,7 @@ namespace ProjectIO.CMakeParser
         {
             Variables["${PROJECT_SOURCE_DIR}"] = sourceDirec;
             Variables["${PROJECT_BINARY_DIR}"] = binaryDirec;
+            Variables["${CMAKE_CURRENT_LIST_DIR}"] = "${PROJECT_SOURCE_DIR}";
             Variables["${CMAKE_CURRENT_SOURCE_DIR}"] = "${PROJECT_SOURCE_DIR}";
             Variables["${CMAKE_CURRENT_BINARY_DIR}"] = "${PROJECT_BINARY_DIR}";
 
@@ -51,6 +52,7 @@ namespace ProjectIO.CMakeParser
             var state = new State(this);
             state.Variables["${CMAKE_CURRENT_SOURCE_DIR}"] = Variables["${CMAKE_CURRENT_SOURCE_DIR}"] + "/" + sub;
             state.Variables["${CMAKE_CURRENT_BINARY_DIR}"] = Variables["${CMAKE_CURRENT_BINARY_DIR}"] + "/" + sub;
+            state.Variables["${CMAKE_CURRENT_LIST_DIR}"] = state.Variables["${CMAKE_CURRENT_SOURCE_DIR}"];
             return state;
         }
 

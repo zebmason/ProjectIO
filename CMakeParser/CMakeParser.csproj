@@ -51,6 +51,7 @@
     <Compile Include="TargetCompileDefinitions.cs" />
     <Compile Include="TargetIncludeDirectories.cs" />
     <Compile Include="TargetLinkLibraries.cs" />
+    <Compile Include="TargetSources.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="File.cs" />
     <Compile Include="AddBinary.cs" />

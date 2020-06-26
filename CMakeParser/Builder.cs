@@ -92,6 +92,22 @@ namespace ProjectIO.CMakeParser
             }
         }
 
+        internal class TargetSourcesHandler : TargetSources.IHandler
+        {
+            private readonly Dictionary<string, Core.Project> _projects;
+
+            public TargetSourcesHandler(Dictionary<string, Core.Project> projects)
+            {
+                _projects = projects;
+            }
+
+            public void AddSourceToBinary(string name, string source)
+            {
+                var project = _projects[name] as Core.Cpp;
+                project.FilePaths.Add(source);
+            }
+        }
+
         internal class SourceGroupHandler : SourceGroup.IHandler
         {
             private readonly Dictionary<string, string> _filters;
@@ -127,6 +143,9 @@ namespace ProjectIO.CMakeParser
 
             var targetIncludeDirectories = new TargetIncludeDirectories(new TargetIncludeDirectoriesHandler(projects));
             lists.AddCommand("target_include_directories", targetIncludeDirectories);
+
+            var targetSources = new TargetSources(new TargetSourcesHandler(projects));
+            lists.AddCommand("target_sources", targetSources);
 
             var ignore = new Ignore();
             var ignoreCommands = new string[] { "add_custom_target", "add_dependencies", "add_test", "cmake_minimum_required", "enable_testing", "fetchcontent_declare", "fetchcontent_getproperties", "find_package", "include", "option", "project" };
