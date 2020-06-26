@@ -17,6 +17,8 @@ namespace ProjectIO.CMakeParser
 
         private readonly Dictionary<string, CMakeParser.ICommand> _commands = new Dictionary<string, CMakeParser.ICommand>();
 
+        private readonly Dictionary<string, KeyValuePair<string, Block>> _functions = new Dictionary<string, KeyValuePair<string, Block>>();
+
         public CMakeLists(State state, ILogger notHandled)
         {
             _state = state;
@@ -122,7 +124,7 @@ namespace ProjectIO.CMakeParser
             Parse(block._blocks);
             return false;
         }
-        
+
         private class Block
         {
             public string _line = string.Empty;
@@ -173,11 +175,11 @@ namespace ProjectIO.CMakeParser
 
                 var command = Command(part);
 
-                string[] endOfBlock = new string[] { "endforeach", "endwhile", "elseif", "else", "endif" };
+                string[] endOfBlock = new string[] { "endforeach", "endwhile", "elseif", "else", "endif", "endfunction" };
                 if (endOfBlock.Contains(command.Key))
                     stack.RemoveAt(0);
 
-                string[] startOfBlock = new string[] { "foreach", "while", "if", "elseif", "else" };
+                string[] startOfBlock = new string[] { "foreach", "while", "if", "elseif", "else", "function" };
                 if (startOfBlock.Contains(command.Key))
                 {
                     var current = new Block();
@@ -235,6 +237,24 @@ namespace ProjectIO.CMakeParser
                     continue;
                 }
 
+                if (command.Key == "function")
+                {
+                    var args = command.Value.Split(new char[] { ' ' });
+                    _functions.Add(args[0], new KeyValuePair<string, Block>(command.Value, block));
+                    continue;
+                }
+
+                if (command.Key == "endfunction")
+                {
+                    continue;
+                }
+
+                if (_functions.ContainsKey(command.Key))
+                {
+                    EvalFunction(command);
+                    continue;
+                }
+
                 if (_commands.ContainsKey(command.Key))
                 {
                     _commands[command.Key].Command(command, _state);
@@ -243,6 +263,20 @@ namespace ProjectIO.CMakeParser
 
                 _logger.Warn(string.Format("Skipping {0}", line.Trim()), _state);
             }
+        }
+
+        private void EvalFunction(KeyValuePair<string, string> command)
+        {
+            _logger.Info(string.Format("Evaluating {0}({1})", command.Key, command.Value), _state);
+            var args = command.Value.Split(new char[] { ' ' });
+            var function = _functions[command.Key];
+            var vars = function.Key.Split(new char[] { ' ' });
+            for (int i = 0; i < args.Length; ++i)
+            {
+                _state.Variables["${" + vars[i+1] + "}"] = _state.Replace(args[i]);
+            }
+
+            Parse(function.Value._blocks );
         }
     }
 }

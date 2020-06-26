@@ -96,6 +96,11 @@ namespace ProjectIO.CMakeParser
         {
             path = path.Replace("\"", string.Empty);
 
+            if (path.Length == 0)
+            {
+                return string.Empty;
+            }
+
             if (System.IO.Path.GetPathRoot(path).Length == 0)
             {
                 path = System.IO.Path.Combine(Replace("${CMAKE_CURRENT_SOURCE_DIR}", 0), path);
