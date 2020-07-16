@@ -31,7 +31,7 @@ namespace ProjectIO.CMakeParser
             _commands[name] = command;
         }
 
-        public static KeyValuePair<string, string> Command(string line)
+        private static KeyValuePair<string, string> Command(string line)
         {
             var index = line.IndexOf("(");
             var command = line.Substring(0, index).Trim();

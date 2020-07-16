@@ -29,7 +29,7 @@ namespace ProjectIO.VisualStudio
             return list;
         }
 
-        public static string PathToFilter(string filename, string sourceDirec)
+        private static string PathToFilter(string filename, string sourceDirec)
         {
             var filter = System.IO.Path.GetDirectoryName(filename);
             var common = System.IO.Path.Combine(filter, sourceDirec);
@@ -69,7 +69,7 @@ namespace ProjectIO.VisualStudio
             return dict2;
         }
 
-        public Dictionary<string, string> Files(bool filterFile, string name, string sourceDirec)
+        private Dictionary<string, string> Files(bool filterFile, string name, string sourceDirec)
         {
             if (filterFile)
                 return Filters(name, sourceDirec);
@@ -88,7 +88,7 @@ namespace ProjectIO.VisualStudio
             return dict2;
         }
 
-        public HashSet<string> Includes()
+        private HashSet<string> Includes()
         {
             var includes = new HashSet<string>();
             var group = _xml.Group("ItemDefinitionGroup", _configPlatform);
@@ -128,7 +128,7 @@ namespace ProjectIO.VisualStudio
             return includes;
         }
 
-        public List<string> CompileDefinitions()
+        private List<string> CompileDefinitions()
         {
             var defns = new List<string>();
             var group = _xml.Group("ItemDefinitionGroup", _configPlatform);

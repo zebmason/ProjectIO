@@ -21,7 +21,7 @@ namespace ProjectIO.CMakeParser
 
         public List<string> CompileDefinitions { get; } = new List<string>();
 
-        public Core.Paths Paths { get; }
+        private readonly Core.Paths _paths;
 
         public State(string sourceDirec, string binaryDirec, Core.Paths paths)
         {
@@ -34,7 +34,7 @@ namespace ProjectIO.CMakeParser
             Switches["WIN32"] = true;
             Switches["UNIX"] = false;
 
-            Paths = paths;
+            _paths = paths;
         }
 
         public State(State state)
@@ -44,7 +44,7 @@ namespace ProjectIO.CMakeParser
             Switches = state.Switches.ToDictionary(entry => entry.Key, entry => entry.Value);
             IncludeDirectories = state.IncludeDirectories.ToList();
             CompileDefinitions = state.CompileDefinitions.ToList();
-            Paths = state.Paths;
+            _paths = state._paths;
         }
 
         public State SubDirectory(string sub)
@@ -81,12 +81,12 @@ namespace ProjectIO.CMakeParser
                 var val = System.Environment.GetEnvironmentVariable(env);
                 initial = initial.Replace("$ENV{" + env + "}", val);
                 index = initial.IndexOf("$ENV{");
-                if (!Paths.ContainsAlias(env))
+                if (!_paths.ContainsAlias(env))
                 {
                     var path = val.Replace("\"", string.Empty);
                     if (System.IO.Directory.Exists(path))
                     {
-                        Paths.Add(env, path);
+                        _paths.Add(env, path);
                     }
                 }
             }

@@ -36,7 +36,7 @@ namespace ProjectIO.VisualStudio
             return list;
         }
 
-        public List<string> DefineConstants()
+        private List<string> DefineConstants()
         {
             var defns = new List<string>();
             var group = _xml.Group("PropertyGroup", _configPlatform);

@@ -50,7 +50,7 @@ namespace ProjectIO.CMakeLister
             }
         }
 
-        public static CMakeParser.CMakeLists Instance(CMakeParser.State state, Core.ILogger logger)
+        private static CMakeParser.CMakeLists Instance(CMakeParser.State state, Core.ILogger logger)
         {
             var log = new CMakeParser.Logger(logger);
             var lists = new CMakeParser.CMakeLists(state, log);

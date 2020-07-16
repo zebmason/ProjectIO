@@ -14,7 +14,7 @@ namespace ProjectIO.VStoVS
 
     class Program
     {
-        public static void MainFunc(string[] args, Core.ILogger logger)
+        private static void MainFunc(string[] args, Core.ILogger logger)
         {
             logger.Info("VStoVS command line application for creating a Visual Studio solution from a Visual Studio solution!");
             logger.Info("Copyright (c) 2020 Zebedee Mason");

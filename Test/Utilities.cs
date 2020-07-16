@@ -136,7 +136,7 @@ namespace ProjectIO.Test
             file.Close();
         }
 
-        public ListerUtilities ConstructRead(string direc)
+        private ListerUtilities ConstructRead(string direc)
         {
             string sourceDirec = System.IO.Path.Combine("Source", direc);
             string binaryDirec = System.IO.Path.Combine("Binary", direc);
@@ -173,7 +173,7 @@ namespace ProjectIO.Test
             file.Close();
         }
 
-        public VSUtilities ConstructRead(string direc)
+        private VSUtilities ConstructRead(string direc)
         {
             string cmakeLists = System.IO.Path.Combine(System.IO.Path.Combine("Source", direc), "CMakeLists.txt");
             string cmakeCache = System.IO.Path.Combine(System.IO.Path.Combine("Binary", direc), "CMakeCache.txt");
