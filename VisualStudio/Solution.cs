@@ -32,7 +32,7 @@ namespace ProjectIO.VisualStudio
                 var ext = System.IO.Path.GetExtension(filename);
                 if (ext == ".csproj" || ext == ".shproj" || ext == ".vbproj" || ext == ".vcxproj")
                 {
-                    projects.Add(System.IO.Path.Combine(direc, filename));
+                    projects.Add(System.IO.Path.GetFullPath(System.IO.Path.Combine(direc, filename)));
                     logger.Info("Appended for reading \"{0}\"", filename);
                 }
             }
