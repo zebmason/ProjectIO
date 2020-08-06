@@ -18,7 +18,7 @@ namespace ProjectIO.CMakeParser
         {
             var pair = Utilities.Split(command.Value);
             var val = pair.Value;
-            var index = val.IndexOf(" CACHE PATH ");
+            var index = val.IndexOf(" CACHE ");
             if (index != -1)
             {
                 val = val.Substring(0, index);

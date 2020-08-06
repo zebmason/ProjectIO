@@ -129,6 +129,7 @@ namespace ProjectIO.CMakeParser
         {
             var items = new List<string>();
             list = Replace(" " + list + " ");
+            list = list.Replace(";", " ");
             foreach (var item in list.Split(new char[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries))
             {
                 items.Add(item);
