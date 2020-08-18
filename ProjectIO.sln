@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualStudio", "VisualStudi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VStoVS", "VStoVS\VStoVS.csproj", "{DA0C19F6-90FF-4773-8E47-7C1CBBE87F8F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualStudioToCMake", "VisualStudioToCMake\VisualStudioToCMake.csproj", "{9CDC8C0F-192D-4118-9FF5-7918E2E5DA96}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{DA0C19F6-90FF-4773-8E47-7C1CBBE87F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA0C19F6-90FF-4773-8E47-7C1CBBE87F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA0C19F6-90FF-4773-8E47-7C1CBBE87F8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CDC8C0F-192D-4118-9FF5-7918E2E5DA96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CDC8C0F-192D-4118-9FF5-7918E2E5DA96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CDC8C0F-192D-4118-9FF5-7918E2E5DA96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CDC8C0F-192D-4118-9FF5-7918E2E5DA96}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

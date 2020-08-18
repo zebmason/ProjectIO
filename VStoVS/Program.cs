@@ -64,7 +64,7 @@ namespace ProjectIO.VStoVS
             var projects = new Dictionary<string, Core.Project>();
             var filters = new Dictionary<string, string>();
             var paths = new Core.Paths();
-            VisualStudio.Solution.Extract(logger, paths, filePaths, projects, filters);
+            VisualStudio.Solution.Extract(logger, paths, filePaths, projects, filters, args[3]);
 
             var solutionName = System.IO.Path.GetFileNameWithoutExtension(args[2]);
             var solution = new VisualStudio.Writer(projects, filters);
