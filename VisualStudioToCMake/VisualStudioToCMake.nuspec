@@ -9,10 +9,10 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">LGPL-2.1-only</license>
     <projectUrl>https://github.com/zebmason/ProjectIO</projectUrl>
-    <description>A tool to create a Visual Studio solution from a CMake project.
-ProjectIO.CMakeToVisualStudio.exe &lt;output directory&gt; &lt;template directory&gt; &lt;CMakeLists.txt&gt; [CMakeCache.txt]
+    <description>A tool to create a set of CMakeLists.txt files from a Visual Studio solution.
+ProjectIO.VisualStudioToCMake.exe &lt;Visual Studio solution&gt; &lt;configuration|platform&gt; [root directory if different from sln file path]
     </description>
-    <releaseNotes>Bug fix and general maintenance.</releaseNotes>
+    <releaseNotes>First release.</releaseNotes>
     <copyright>Copyright 2020</copyright>
     <tags>CMake c++</tags>
     <dependencies>
