@@ -1,7 +1,7 @@
 # ProjectIO
 
 *Latest stable version:* [![NuGet](https://img.shields.io/nuget/v/ProjectIO.CMakeToVisualStudio.svg)](https://www.nuget.org/packages/ProjectIO.CMakeToVisualStudio/)
-[![Build Status](https://api.travis-ci.org/zebmason/CMakeParser.svg?branch=master)](https://travis-ci.org/zebmason/CMakeParser)
+[![Build Status](https://api.travis-ci.org/zebmason/ProjectIO.svg?branch=master)](https://travis-ci.org/github/zebmason/ProjectIO)
 
 N.B. Travis CI seems to have a problem with checking out this repository.
 

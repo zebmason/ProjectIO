@@ -1,9 +1,9 @@
 ---
 language: csharp
-solution: CMakeParser.sln
+solution: ProjectIO.sln
 install:
-  - nuget restore CMakeParser.sln
+  - nuget restore ProjectIO.sln
   - nuget install NUnit.Console -Version 3.9.0 -OutputDirectory testrunner
 script:
-  - msbuild /p:Configuration=Release CMakeParser.sln
-  - mono ./testrunner/NUnit.ConsoleRunner.3.9.0/tools/nunit3-console.exe ./Test/bin/Release/Test.dll
+  - msbuild /p:Configuration=Release ProjectIO.sln
+  - mono ./testrunner/NUnit.ConsoleRunner.3.9.0/tools/nunit3-console.exe ./Test/bin/Release/ProjectIO.Test.dll
