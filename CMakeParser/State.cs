@@ -168,9 +168,42 @@ namespace ProjectIO.CMakeParser
             var items = new List<string>();
             list = Replace(" " + list + " ");
             list = list.Replace(";", " ");
-            foreach (var item in list.Split(new char[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries))
+            list = list.Trim();
+
+            while (list.Length > 0)
             {
-                items.Add(item);
+                int index = 0;
+                bool inQuotes = false;
+                for(; index < list.Length; ++index)
+                {
+                    if (inQuotes)
+                    {
+                        if (list[index] == '"')
+                            inQuotes = false;
+
+                        continue;
+                    }
+
+                    if (list[index] == '"')
+                    {
+                        inQuotes = true;
+                        continue;
+                    }
+
+                    if (list[index] == ' ')
+                    {
+                        break;
+                    }
+                }
+
+                if (index == list.Length)
+                {
+                    items.Add(list);
+                    break;
+                }
+
+                items.Add(list.Substring(0, index));
+                list = list.Substring(index).TrimStart();
             }
 
             return items;
