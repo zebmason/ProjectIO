@@ -52,8 +52,7 @@ namespace ProjectIO.CMakeLister
 
         private static CMakeParser.CMakeLists Instance(CMakeParser.State state, Core.ILogger logger)
         {
-            var log = new CMakeParser.Logger(logger);
-            var lists = new CMakeParser.CMakeLists(state, log);
+            var lists = new CMakeParser.CMakeLists(state);
 
             var addBinary = new CMakeParser.AddBinary(new AddBinaryHandler(logger));
             var binaryCommands = new string[] { "add_executable", "add_library", "catkin_add_gtest" };
@@ -71,9 +70,9 @@ namespace ProjectIO.CMakeLister
 
             lists.AddCommand("set", new CMakeParser.Set());
 
-            lists.AddCommand("file", new CMakeParser.File(log));
+            lists.AddCommand("file", new CMakeParser.File());
 
-            lists.AddCommand("source_group", new CMakeParser.SourceGroup(new SourceGroupHandler(logger), log));
+            lists.AddCommand("source_group", new CMakeParser.SourceGroup(new SourceGroupHandler(logger)));
 
             lists.AddCommand("include_directories", new CMakeParser.IncludeDirectories());
 
@@ -84,7 +83,7 @@ namespace ProjectIO.CMakeLister
 
         public static void MainFunc(string[] args, Core.ILogger logger)
         {
-            var state = new CMakeParser.State(args[0], (args.Length > 1) ? args[1] : string.Empty, new Core.Paths());
+            var state = new CMakeParser.State(logger, args[0], (args.Length > 1) ? args[1] : string.Empty, new Core.Paths());
             var cmake = Instance(state, logger);
             cmake.Read();
         }
