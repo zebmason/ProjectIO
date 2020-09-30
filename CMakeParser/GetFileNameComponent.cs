@@ -10,11 +10,8 @@ namespace ProjectIO.CMakeParser
 
     public class GetFileNameComponent : ICommand
     {
-        private readonly ILogger _logger;
-
-        public GetFileNameComponent(ILogger logger)
+        public GetFileNameComponent()
         {
-            _logger = logger;
         }
 
         public void Initialise(State state)
@@ -34,7 +31,7 @@ namespace ProjectIO.CMakeParser
                 return;
             }
 
-            _logger.Unhandled(command, state);
+            state.Unhandled(command);
         }
     }
 }

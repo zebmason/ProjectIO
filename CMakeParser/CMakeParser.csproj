@@ -46,7 +46,6 @@
     <Compile Include="CMakeLists.cs" />
     <Compile Include="GetFileNameComponent.cs" />
     <Compile Include="IncludeDirectories.cs" />
-    <Compile Include="IWriter.cs" />
     <Compile Include="State.cs" />
     <Compile Include="TargetCompileDefinitions.cs" />
     <Compile Include="TargetIncludeDirectories.cs" />

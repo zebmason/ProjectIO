@@ -17,12 +17,9 @@ namespace ProjectIO.CMakeParser
 
         private readonly IHandler _handler;
 
-        private readonly ILogger _logger;
-
-        public SourceGroup(IHandler handler, ILogger logger)
+        public SourceGroup(IHandler handler)
         {
             _handler = handler;
-            _logger = logger;
         }
 
         public void Initialise(State state)
@@ -87,7 +84,7 @@ namespace ProjectIO.CMakeParser
                 return;
             }
 
-            _logger.Unhandled(command, state);
+            state.Unhandled(command);
         }
     }
 }

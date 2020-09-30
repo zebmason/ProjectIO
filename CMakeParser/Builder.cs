@@ -125,8 +125,7 @@ namespace ProjectIO.CMakeParser
 
         internal static CMakeLists Instance(State state, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters, Core.ILogger logger)
         {
-            var log = new Logger(logger);
-            var lists = new CMakeLists(state, log);
+            var lists = new CMakeLists(state);
 
             var addBinary = new AddBinary(new AddBinaryHandler(logger, projects));
             var binaryCommands = new string[] { "add_executable", "add_library", "catkin_add_gtest" };
@@ -156,13 +155,13 @@ namespace ProjectIO.CMakeParser
 
             lists.AddCommand("set", new Set());
 
-            lists.AddCommand("file", new File(log));
+            lists.AddCommand("file", new File());
 
-            lists.AddCommand("source_group", new SourceGroup(new SourceGroupHandler(filters), log));
+            lists.AddCommand("source_group", new SourceGroup(new SourceGroupHandler(filters)));
 
             lists.AddCommand("include_directories", new IncludeDirectories());
 
-            lists.AddCommand("get_filename_component", new GetFileNameComponent(log));
+            lists.AddCommand("get_filename_component", new GetFileNameComponent());
 
             lists.AddCommand("add_compile_definitions", new AddCompileDefinitions());
 
@@ -200,7 +199,7 @@ namespace ProjectIO.CMakeParser
             }
 
             logger.Info("Reading CMake");
-            var state = new State(sourceDirec, binaryDirec, paths);
+            var state = new State(logger, sourceDirec, binaryDirec, paths);
             state.ReadCache(cache);
 
             var builder = Instance(state, projects, filters, logger);

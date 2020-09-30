@@ -21,9 +21,13 @@ namespace ProjectIO.CMakeParser
 
         public List<string> CompileDefinitions { get; } = new List<string>();
 
+        private static HashSet<string> _missingKeys = new HashSet<string>();
+
+        private readonly Core.ILogger _logger;
+
         private readonly Core.Paths _paths;
 
-        public State(string sourceDirec, string binaryDirec, Core.Paths paths)
+        public State(Core.ILogger logger, string sourceDirec, string binaryDirec, Core.Paths paths)
         {
             Variables["${PROJECT_SOURCE_DIR}"] = sourceDirec;
             Variables["${PROJECT_BINARY_DIR}"] = binaryDirec;
@@ -34,6 +38,7 @@ namespace ProjectIO.CMakeParser
             Switches["WIN32"] = true;
             Switches["UNIX"] = false;
 
+            _logger = logger;
             _paths = paths;
         }
 
@@ -44,7 +49,23 @@ namespace ProjectIO.CMakeParser
             Switches = state.Switches.ToDictionary(entry => entry.Key, entry => entry.Value);
             IncludeDirectories = state.IncludeDirectories.ToList();
             CompileDefinitions = state.CompileDefinitions.ToList();
+            _logger = state._logger;
             _paths = state._paths;
+        }
+
+        public void Info(string message)
+        {
+            _logger.Info(string.Format("[{0}] {1}", Variables["${CMAKE_CURRENT_SOURCE_DIR}"], message));
+        }
+
+        public void Warn(string message)
+        {
+            _logger.Warn(string.Format("[{0}] {1}", Variables["${CMAKE_CURRENT_SOURCE_DIR}"], message));
+        }
+
+        public void Unhandled(KeyValuePair<string, string> command)
+        {
+            _logger.Warn(string.Format("[{0}] Unhandled {1}({2})", Variables["${CMAKE_CURRENT_SOURCE_DIR}"], command.Key, command.Value));
         }
 
         public State SubDirectory(string sub)
@@ -65,7 +86,15 @@ namespace ProjectIO.CMakeParser
             var i2 = initial.IndexOf("}", index);
             var key = initial.Substring(index, i2 - index + 1);
             if (!Variables.ContainsKey(key))
+            {
+                if (!_missingKeys.Contains(key))
+                {
+                    Warn("Cache does not contain " + key);
+                    _missingKeys.Add(key);
+                }
+
                 return Replace(initial, index + 1);
+            }
 
             return Replace(initial.Replace(key, Variables[key]), index);
         }
@@ -83,6 +112,15 @@ namespace ProjectIO.CMakeParser
                 index = initial.IndexOf("$ENV{");
                 if (!_paths.ContainsAlias(env))
                 {
+                    if (val == null)
+                    {
+                        if (!_missingKeys.Contains(env))
+                        {
+                            Warn(string.Format("Environment does not contain $ENV{{{0}}}", env));
+                            _missingKeys.Add(env);
+                        }
+                        continue;
+                    }
                     var path = val.Replace("\"", string.Empty);
                     if (System.IO.Directory.Exists(path))
                     {

@@ -10,11 +10,8 @@ namespace ProjectIO.CMakeParser
 
     public class File : ICommand
     {
-        private readonly ILogger _logger;
-
-        public File(ILogger logger)
+        public File()
         {
-            _logger = logger;
         }
 
         public void Initialise(State state)
@@ -55,7 +52,7 @@ namespace ProjectIO.CMakeParser
                 return;
             }
 
-            _logger.Unhandled(command, state);
+            state.Unhandled(command);
         }
     }
 }

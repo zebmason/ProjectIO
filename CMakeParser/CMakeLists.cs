@@ -11,18 +11,15 @@ namespace ProjectIO.CMakeParser
 
     public class CMakeLists
     {
-        private readonly ILogger _logger;
-
         private State _state;
 
         private readonly Dictionary<string, CMakeParser.ICommand> _commands = new Dictionary<string, CMakeParser.ICommand>();
 
         private readonly Dictionary<string, KeyValuePair<string, Block>> _functions = new Dictionary<string, KeyValuePair<string, Block>>();
 
-        public CMakeLists(State state, ILogger notHandled)
+        public CMakeLists(State state)
         {
             _state = state;
-            _logger = notHandled;
         }
 
         public void AddCommand(string name, CMakeParser.ICommand command)
@@ -86,7 +83,7 @@ namespace ProjectIO.CMakeParser
                         bits[i] = "TRUE";
                     else
                     {
-                        _logger.Warn(string.Format("Skipping {0}({1}) at {2}", command.Key, command.Value, bits[i]), _state);
+                        _state.Warn(string.Format("Skipping {0}({1}) at {2}", command.Key, command.Value, bits[i]));
                         return false;
                     }
                 }
@@ -113,7 +110,7 @@ namespace ProjectIO.CMakeParser
 
                 if (bits.Count != 1)
                 {
-                    _logger.Warn(string.Format("Skipping {0}({1}) == {2}", command.Key, command.Value, string.Join(" ", bits)), _state);
+                    _state.Warn(string.Format("Skipping {0}({1}) == {2}", command.Key, command.Value, string.Join(" ", bits)));
                     return false;
                 }
 
@@ -261,13 +258,13 @@ namespace ProjectIO.CMakeParser
                     continue;
                 }
 
-                _logger.Warn(string.Format("Skipping {0}", line.Trim()), _state);
+                _state.Warn(string.Format("Skipping {0}", line.Trim()));
             }
         }
 
         private void EvalFunction(KeyValuePair<string, string> command)
         {
-            _logger.Info(string.Format("Evaluating {0}({1})", command.Key, command.Value), _state);
+            _state.Info(string.Format("Evaluating {0}({1})", command.Key, command.Value));
             var args = command.Value.Split(new char[] { ' ' });
             var function = _functions[command.Key];
             var vars = function.Key.Split(new char[] { ' ' });
