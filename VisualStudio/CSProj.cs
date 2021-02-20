@@ -6,6 +6,7 @@
 
 namespace ProjectIO.VisualStudio
 {
+    using System;
     using System.Collections.Generic;
 
     internal class CSProj : NetProj
@@ -61,18 +62,25 @@ namespace ProjectIO.VisualStudio
             return defns;
         }
 
-        public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<Core.Project, List<string>> dependencies, Dictionary<string, string> mapping, string configPlatform)
+        public override Core.Project Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<Core.Project, List<string>> dependencies, Dictionary<string, string> mapping)
         {
-            var solutionPath = paths.Value("SolutionDir");
-            var proj = new CSProj(logger, filePath, paths, configPlatform);
+            var proj = this;
 
             var project = new Core.CSharp();
-            projects[proj.Name] = project;
             project.CompileDefinitions.AddRange(proj.DefineConstants());
 
             dependencies[project] = proj.Dependencies();
             proj.Compiles(project.FilePaths, logger, paths);
             mapping[filePath] = proj.Name;
+
+            return project;
+        }
+
+        [Obsolete("Create a CSProj then use the dynamic Extract")]
+        public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<Core.Project, List<string>> dependencies, Dictionary<string, string> mapping, string configPlatform)
+        {
+            var proj = new CSProj(logger, filePath, paths, configPlatform);
+            projects[proj.Name] = proj.Extract(logger, paths, filePath, dependencies, mapping);
         }
     }
 }

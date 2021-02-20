@@ -8,7 +8,7 @@ namespace ProjectIO.VisualStudio
 {
     using System.Collections.Generic;
 
-    internal class XMLUtils
+    public class XMLUtils
     {
         private readonly System.Xml.XmlDocument _doc;
 

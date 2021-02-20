@@ -1,6 +1,6 @@
 ﻿//------------------------------------------------------------------------------
 // <copyright file="Solution.cs" company="Zebedee Mason">
-//     Copyright (c) 2016-2017 Zebedee Mason.
+//     Copyright (c) 2016-2021 Zebedee Mason.
 // </copyright>
 //------------------------------------------------------------------------------
 
@@ -10,7 +10,7 @@ namespace ProjectIO.VisualStudio
 
     public class Solution
     {
-        private static List<string> ReadVisualStudioSolution(Core.ILogger logger, string slnfilename)
+        public static List<string> ReadVisualStudioSolution(Core.ILogger logger, string slnfilename)
         {
             List<string> projects = new List<string>();
             var direc = System.IO.Path.GetDirectoryName(slnfilename);
@@ -77,10 +77,9 @@ namespace ProjectIO.VisualStudio
             }
         }
 
-        private static void ExtractProjects(Core.ILogger logger, Core.Paths paths, List<string> filePaths, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters, string configPlatform)
+        public static Dictionary<string, Proj> ExtractProjects(Core.ILogger logger, Core.Paths paths, List<string> filePaths, string configPlatform = "Debug|AnyCPU")
         {
-            var dependencies = new Dictionary<Core.Project, List<string>>();
-            var mapping = new Dictionary<string, string>();
+            var projects = new Dictionary<string, Proj>();
             var skipped = new List<string>();
             foreach (var filePath in filePaths)
             {
@@ -90,25 +89,29 @@ namespace ProjectIO.VisualStudio
                 {
                     logger.Info("Appended for reading \"{0}\"", filePath);
                     logger.Info("Reading Visual C++");
-                    VCProj.Extract(logger, paths, filePath, projects, filters, dependencies, mapping, configPlatform);
+                    var proj = new VCProj(logger, filePath, paths, configPlatform);
+                    projects[filePath] = proj;
                     continue;
                 }
 
                 if (ext == ".csproj")
                 {
-                    CSProj.Extract(logger, paths, filePath,  projects, dependencies, mapping, configPlatform);
+                    var proj = new CSProj(logger, filePath, paths, configPlatform);
+                    projects[filePath] = proj;
                     continue;
                 }
 
                 if (ext == ".shproj")
                 {
-                    SHProj.Extract(logger, paths, filePath, projects, dependencies, mapping, configPlatform);
+                    var proj = new SHProj(logger, filePath, paths, configPlatform);
+                    projects[filePath] = proj;
                     continue;
                 }
 
                 if (ext == ".vbproj")
                 {
-                    VBProj.Extract(logger, paths, filePath, projects, dependencies, mapping, configPlatform);
+                    var proj = new VBProj(logger, filePath, paths, configPlatform);
+                    projects[filePath] = proj;
                     continue;
                 }
 
@@ -117,6 +120,25 @@ namespace ProjectIO.VisualStudio
 
             filePaths.Clear();
             filePaths.AddRange(skipped);
+
+            return projects;
+        }
+
+        private static void ExtractProjects(Core.ILogger logger, Core.Paths paths, List<string> filePaths, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters, string configPlatform)
+        {
+            var dependencies = new Dictionary<Core.Project, List<string>>();
+            var mapping = new Dictionary<string, string>();
+            foreach (var proj in ExtractProjects(logger, paths, filePaths, configPlatform))
+            {
+                if (proj.Value is VCProj vcProj)
+                {
+                    projects[proj.Key] = vcProj.Extract(logger, paths, proj.Key, filters, dependencies, mapping);
+                }
+                else if (proj.Value is NetProj netProj)
+                {
+                    projects[proj.Key] = netProj.Extract(logger, paths, proj.Key, dependencies, mapping);
+                }
+            }
 
             foreach (var dep in dependencies)
             {

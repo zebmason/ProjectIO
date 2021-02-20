@@ -6,6 +6,7 @@
 
 namespace ProjectIO.VisualStudio
 {
+    using System;
     using System.Collections.Generic;
 
     internal class VBProj : NetProj
@@ -15,15 +16,24 @@ namespace ProjectIO.VisualStudio
         {
         }
 
+        public override Core.Project Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<Core.Project, List<string>> dependencies, Dictionary<string, string> mapping)
+        {
+            var proj = this;
+
+            var project = new Core.VBasic();
+            dependencies[project] = proj.Dependencies();
+            proj.Compiles(project.FilePaths, logger, paths);
+            mapping[filePath] = proj.Name;
+
+            return project;
+        }
+
+        [Obsolete("Create a VBProj then use the dynamic Extract")]
         public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<Core.Project, List<string>> dependencies, Dictionary<string, string> mapping, string configPlatform)
         {
-            var solutionPath = paths.Value("SolutionDir");
             var proj = new VBProj(logger, filePath, paths, configPlatform);
 
-            projects[proj.Name] = new Core.VBasic();
-            dependencies[projects[proj.Name]] = proj.Dependencies();
-            proj.Compiles(projects[proj.Name].FilePaths, logger, paths);
-            mapping[filePath] = proj.Name;
+            projects[proj.Name] = proj.Extract(logger, paths, filePath, dependencies, mapping);
         }
     }
 }

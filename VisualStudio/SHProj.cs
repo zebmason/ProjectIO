@@ -6,6 +6,7 @@
 
 namespace ProjectIO.VisualStudio
 {
+    using System;
     using System.Collections.Generic;
 
     internal class SHProj : NetProj
@@ -64,15 +65,24 @@ namespace ProjectIO.VisualStudio
             xml2.DotNetCompiles(this, files, logger, filePath);
         }
 
+        public override Core.Project Extract(Core.ILogger logger, Core.Paths paths, string filePath,  Dictionary<Core.Project, List<string>> dependencies, Dictionary<string, string> mapping)
+        {
+            var proj = this;
+
+            var project = new Core.CSharp();
+            dependencies[project] = proj.Dependencies();
+            proj.Compiles(project.FilePaths, logger, paths);
+            mapping[proj.FilePath] = proj.Name;
+
+            return project;
+        }
+
+        [Obsolete("Create a CSProj then use the dynamic Extract")]
         public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<Core.Project, List<string>> dependencies, Dictionary<string, string> mapping, string configPlatform)
         {
-            var solutionPath = paths.Value("SolutionDir");
             var proj = new SHProj(logger, filePath, paths, configPlatform);
 
-            projects[proj.Name] = new Core.CSharp();
-            dependencies[projects[proj.Name]] = proj.Dependencies();
-            proj.Compiles(projects[proj.Name].FilePaths, logger, paths);
-            mapping[proj.FilePath] = proj.Name;
+            projects[proj.Name] = proj.Extract(logger, paths, filePath, dependencies, mapping);
         }
     }
 }

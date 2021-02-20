@@ -6,6 +6,7 @@
 
 namespace ProjectIO.VisualStudio
 {
+    using System;
     using System.Collections.Generic;
 
     internal class VCProj : Proj
@@ -158,13 +159,12 @@ namespace ProjectIO.VisualStudio
             return defns;
         }
 
-        public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters, Dictionary<Core.Project, List<string>> dependencies, Dictionary<string, string> mapping, string configPlatform)
+        public Core.Project Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, string> filters, Dictionary<Core.Project, List<string>> dependencies, Dictionary<string, string> mapping)
         {
             var sourceDirec = paths.Value("SolutionDir");
-            var proj = new VCProj(logger, filePath, paths, configPlatform);
+            var proj = this;
 
             var project = new Core.Cpp();
-            projects[proj.Name] = project;
             project.IncludeDirectories.AddRange(proj.Includes());
             project.CompileDefinitions.AddRange(proj.CompileDefinitions());
             if (project.CompileDefinitions.Contains("_CONSOLE"))
@@ -173,7 +173,7 @@ namespace ProjectIO.VisualStudio
                 project.IsExe = true;
             }
 
-            dependencies[projects[proj.Name]] = proj.Dependencies();
+            dependencies[project] = proj.Dependencies();
 
             foreach (var type in new string[] { "ClInclude", "ClCompile" })
             {
@@ -189,6 +189,15 @@ namespace ProjectIO.VisualStudio
             }
 
             mapping[filePath] = proj.Name;
+
+            return project;
+        }
+
+        [Obsolete("Create a VCProj then use the dynamic Extract")]
+        public static void Extract(Core.ILogger logger, Core.Paths paths, string filePath, Dictionary<string, Core.Project> projects, Dictionary<string, string> filters, Dictionary<Core.Project, List<string>> dependencies, Dictionary<string, string> mapping, string configPlatform)
+        {
+            var proj = new VCProj(logger, filePath, paths, configPlatform);
+            projects[proj.Name] = proj.Extract(logger, paths, filePath, filters, dependencies, mapping);
         }
     }
 }

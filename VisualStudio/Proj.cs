@@ -8,7 +8,7 @@ namespace ProjectIO.VisualStudio
 {
     using System.Collections.Generic;
 
-    internal abstract class Proj
+    public abstract class Proj
     {
         protected Core.ILogger _logger;
 
@@ -61,5 +61,10 @@ namespace ProjectIO.VisualStudio
         }
 
         public abstract List<string> Externals();
+
+        public virtual Dictionary<string, string> ExternalsWithVersions(bool includeSystem = false)
+        {
+            return new Dictionary<string, string>();
+        }
     }
 }
