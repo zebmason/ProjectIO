@@ -132,11 +132,11 @@ namespace ProjectIO.VisualStudio
             {
                 if (proj.Value is VCProj vcProj)
                 {
-                    projects[proj.Key] = vcProj.Extract(logger, paths, proj.Key, filters, dependencies, mapping);
+                    projects[proj.Value.Name] = vcProj.Extract(logger, paths, proj.Key, filters, dependencies, mapping);
                 }
                 else if (proj.Value is NetProj netProj)
                 {
-                    projects[proj.Key] = netProj.Extract(logger, paths, proj.Key, dependencies, mapping);
+                    projects[proj.Value.Name] = netProj.Extract(logger, paths, proj.Key, dependencies, mapping);
                 }
             }
 
