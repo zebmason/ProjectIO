@@ -48,7 +48,7 @@ namespace ProjectIO.Test
 
         protected string _lines;
 
-        internal Utilities(string testDirec = @"../../Data")
+        internal Utilities(string testDirec = @"../../../Data")
         {
             _dataDirec = System.Reflection.Assembly.GetAssembly(typeof(Utilities)).Location;
             _dataDirec = System.IO.Path.GetDirectoryName(_dataDirec);
