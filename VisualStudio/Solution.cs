@@ -10,11 +10,11 @@ namespace ProjectIO.VisualStudio
 
     public class Solution
     {
-        public static List<string> ReadVisualStudioSolution(Core.ILogger logger, string slnfilename)
+        public static List<string> ReadVisualStudioSolution(Core.ILogger logger, string solutionPath)
         {
             List<string> projects = new List<string>();
-            var direc = System.IO.Path.GetDirectoryName(slnfilename);
-            foreach (var line in System.IO.File.ReadAllLines(slnfilename))
+            var direc = System.IO.Path.GetDirectoryName(solutionPath);
+            foreach (var line in System.IO.File.ReadAllLines(solutionPath))
             {
                 if (line.Length <= 10)
                 {
@@ -32,7 +32,14 @@ namespace ProjectIO.VisualStudio
                 var ext = System.IO.Path.GetExtension(filename);
                 if (ext == ".csproj" || ext == ".shproj" || ext == ".vbproj" || ext == ".vcxproj")
                 {
-                    projects.Add(System.IO.Path.GetFullPath(System.IO.Path.Combine(direc, filename)));
+                    var projectPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(direc, filename));
+                    if (!System.IO.File.Exists(projectPath))
+                    {
+                        logger.Warn(string.Format("{0} contains non-existent project {1}", solutionPath, projectPath));
+                        continue;
+                    }
+
+                    projects.Add(projectPath);
                     logger.Info("Appended for reading \"{0}\"", filename);
                 }
             }
