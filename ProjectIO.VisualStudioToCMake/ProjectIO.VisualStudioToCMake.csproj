@@ -6,13 +6,16 @@
     <FileVersion>3.7.1.0</FileVersion>
     <Copyright>Copyright ©  2019-2022 Zebedee Mason</Copyright>
     <Company>Zebedee Mason</Company>
-    <Version>1.0.0</Version>
+    <Version>3.7.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <LangVersion>latest</LangVersion>
     <Authors>zebmason</Authors>
     <Description>Parser for project files</Description>
     <PackageProjectUrl>https://github.com/zebmason/ProjectIO</PackageProjectUrl>
+    <PackageLicenseExpression>LGPL-2.1-only</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/zebmason/ProjectIO</RepositoryUrl>
+  </PropertyGroup>
+  <PropertyGroup>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath></OutputPath>
