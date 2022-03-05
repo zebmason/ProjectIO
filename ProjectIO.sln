@@ -3,21 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.852
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMakeParser", "CMakeParser\CMakeParser.csproj", "{6E9B242F-3935-4C65-A01E-1B5A5AB4CB3A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectIO.CMakeParser", "ProjectIO.CMakeParser\ProjectIO.CMakeParser.csproj", "{6E9B242F-3935-4C65-A01E-1B5A5AB4CB3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMakeLister", "CMakeLister\CMakeLister.csproj", "{8E6161FC-E356-43D1-93A3-55131E382C4B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectIO.CMakeLister", "ProjectIO.CMakeLister\ProjectIO.CMakeLister.csproj", "{8E6161FC-E356-43D1-93A3-55131E382C4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{63477A77-77B1-4987-BFFF-EA8A5BC2FC75}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectIO.Test", "ProjectIO.Test\ProjectIO.Test.csproj", "{63477A77-77B1-4987-BFFF-EA8A5BC2FC75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMakeToVisualStudio", "CMakeToVisualStudio\CMakeToVisualStudio.csproj", "{6BFA2CA1-9119-4104-A081-011E1D038A22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectIO.CMakeToVisualStudio", "ProjectIO.CMakeToVisualStudio\ProjectIO.CMakeToVisualStudio.csproj", "{6BFA2CA1-9119-4104-A081-011E1D038A22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{543A7173-C259-4C56-865C-8E8E43D5D59D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectIO.Core", "ProjectIO.Core\ProjectIO.Core.csproj", "{543A7173-C259-4C56-865C-8E8E43D5D59D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualStudio", "VisualStudio\VisualStudio.csproj", "{4A1C689C-78CF-4137-B85D-FD42F6B9961C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectIO.VisualStudio", "ProjectIO.VisualStudio\ProjectIO.VisualStudio.csproj", "{4A1C689C-78CF-4137-B85D-FD42F6B9961C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VStoVS", "VStoVS\VStoVS.csproj", "{DA0C19F6-90FF-4773-8E47-7C1CBBE87F8F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectIO.VStoVS", "ProjectIO.VStoVS\ProjectIO.VStoVS.csproj", "{DA0C19F6-90FF-4773-8E47-7C1CBBE87F8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualStudioToCMake", "VisualStudioToCMake\VisualStudioToCMake.csproj", "{9CDC8C0F-192D-4118-9FF5-7918E2E5DA96}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectIO.VisualStudioToCMake", "ProjectIO.VisualStudioToCMake\ProjectIO.VisualStudioToCMake.csproj", "{9CDC8C0F-192D-4118-9FF5-7918E2E5DA96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

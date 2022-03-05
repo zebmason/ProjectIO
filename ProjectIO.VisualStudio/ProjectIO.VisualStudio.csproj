@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <Platforms>AnyCPU</Platforms>
     <AssemblyVersion>3.7.1.0</AssemblyVersion>
     <FileVersion>3.7.1.0</FileVersion>
@@ -21,7 +21,6 @@
     <OutputPath></OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj" />
-    <ProjectReference Include="..\VisualStudio\VisualStudio.csproj" />
+    <ProjectReference Include="..\ProjectIO.Core\ProjectIO.Core.csproj" />
   </ItemGroup>
 </Project>

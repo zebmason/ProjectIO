@@ -21,7 +21,8 @@
     <OutputPath></OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj" />
-    <ProjectReference Include="..\VisualStudio\VisualStudio.csproj" />
+    <ProjectReference Include="..\ProjectIO.CMakeParser\ProjectIO.CMakeParser.csproj" />
+    <ProjectReference Include="..\ProjectIO.Core\ProjectIO.Core.csproj" />
+    <ProjectReference Include="..\ProjectIO.VisualStudio\ProjectIO.VisualStudio.csproj" />
   </ItemGroup>
 </Project>

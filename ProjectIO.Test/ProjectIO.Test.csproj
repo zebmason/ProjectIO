@@ -36,8 +36,8 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CMakeLister\CMakeLister.csproj" />
-    <ProjectReference Include="..\CMakeToVisualStudio\CMakeToVisualStudio.csproj" />
-    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\ProjectIO.CMakeLister\ProjectIO.CMakeLister.csproj" />
+    <ProjectReference Include="..\ProjectIO.CMakeToVisualStudio\ProjectIO.CMakeToVisualStudio.csproj" />
+    <ProjectReference Include="..\ProjectIO.Core\ProjectIO.Core.csproj" />
   </ItemGroup>
 </Project>

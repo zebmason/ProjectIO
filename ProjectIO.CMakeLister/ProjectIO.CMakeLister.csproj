@@ -21,7 +21,7 @@
     <OutputPath></OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CMakeParser\CMakeParser.csproj" />
-    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\ProjectIO.CMakeParser\ProjectIO.CMakeParser.csproj" />
+    <ProjectReference Include="..\ProjectIO.Core\ProjectIO.Core.csproj" />
   </ItemGroup>
 </Project>

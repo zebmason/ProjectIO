@@ -21,6 +21,6 @@
     <OutputPath></OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\ProjectIO.Core\ProjectIO.Core.csproj" />
   </ItemGroup>
 </Project>
