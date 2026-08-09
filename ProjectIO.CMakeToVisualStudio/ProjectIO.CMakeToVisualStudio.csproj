@@ -1,13 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <Platforms>AnyCPU</Platforms>
-    <AssemblyVersion>3.7.1.0</AssemblyVersion>
-    <FileVersion>3.7.1.0</FileVersion>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyVersion>3.7.2.0</AssemblyVersion>
+    <FileVersion>3.7.2.0</FileVersion>
     <Copyright>Copyright ©  2019-2022 Zebedee Mason</Copyright>
     <Company>Zebedee Mason</Company>
-    <Version>3.7.1</Version>
+    <Version>3.7.2</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <LangVersion>latest</LangVersion>
     <Authors>zebmason</Authors>
@@ -16,15 +18,11 @@
     <PackageLicenseExpression>LGPL-2.1-only</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/zebmason/ProjectIO</RepositoryUrl>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath></OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath></OutputPath>
-  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\ProjectIO.CMakeParser\ProjectIO.CMakeParser.csproj" />
     <ProjectReference Include="..\ProjectIO.Core\ProjectIO.Core.csproj" />
     <ProjectReference Include="..\ProjectIO.VisualStudio\ProjectIO.VisualStudio.csproj" />
   </ItemGroup>
+
 </Project>
