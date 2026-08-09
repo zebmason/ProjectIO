@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <AssemblyVersion>3.7.2.0</AssemblyVersion>
     <FileVersion>3.7.2.0</FileVersion>
     <Copyright>Copyright ©  2019-2022 Zebedee Mason</Copyright>
@@ -15,7 +15,12 @@
     <Description>Parser for project files</Description>
     <PackageProjectUrl>https://github.com/zebmason/ProjectIO</PackageProjectUrl>
     <RepositoryUrl>https://github.com/zebmason/ProjectIO</RepositoryUrl>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="docs\readme.md" Pack="true" PackagePath=""/>
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ProjectIO.CMakeParser\ProjectIO.CMakeParser.csproj" />
